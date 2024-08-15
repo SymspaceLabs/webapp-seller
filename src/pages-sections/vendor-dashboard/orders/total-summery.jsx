@@ -2,10 +2,10 @@ import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField"; // GLOBAL CUSTOM COMPONENTS
 
-import { FlexBetween, FlexBox } from "components/flex-box";
-import { H5, H6, Paragraph } from "components/Typography"; // CUSTOM UTILS LIBRARY FUNCTION
+import { FlexBetween, FlexBox } from "../../../components/flex-box";
+import { H5, H6, Paragraph } from "../../../components/Typography"; // CUSTOM UTILS LIBRARY FUNCTION
 
-import { currency } from "lib"; // ==============================================================
+import { currency } from "../../../lib"; // ==============================================================
 
 // ==============================================================
 const TotalSummery = ({

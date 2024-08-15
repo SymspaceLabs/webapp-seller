@@ -237,7 +237,7 @@ const vendorPageList = [{
   page: "admin"
 }, {
   imgUrl: "/assets/images/landing/vendor/create-product.jpg",
-  previewUrl: "/admin/products/create",
+  previewUrl: "/vendor/products/create",
   title: "Create Product",
   status: "New",
   page: "admin"

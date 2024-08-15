@@ -11,13 +11,13 @@ export const navigation = [{
   icon: duotone.Products,
   children: [{
     name: "Product List",
-    path: "/admin/products"
+    path: "/vendor/products"
   }, {
     name: "Create Product",
-    path: "/admin/products/create"
+    path: "/vendor/products/create"
   }, {
     name: "Product Reviews",
-    path: "/admin/products/reviews"
+    path: "/vendor/products/reviews"
   }]
 }, {
   name: "Categories",
