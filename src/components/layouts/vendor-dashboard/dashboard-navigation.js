@@ -18,6 +18,9 @@ export const navigation = [{
   }, {
     name: "Product Reviews",
     path: "/vendor/products/reviews"
+  }, {
+    name: "3D Model",
+    path: "/vendor/products/3d-model"
   }]
 }, {
   name: "Categories",
