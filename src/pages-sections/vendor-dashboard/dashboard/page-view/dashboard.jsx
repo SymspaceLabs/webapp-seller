@@ -20,6 +20,7 @@ import api2 from "../../../../utils/__api__/ticket";
 
 // DATA TYPES
 import CustomerService from "../../../../icons/CustomerService";
+import { Typography } from "@mui/material";
 
 const DashboardPageView = () => {
   const [cardList, setCardList] = useState([]);
@@ -49,11 +50,24 @@ const DashboardPageView = () => {
   }, []);
 
   return (
-    <Box py={4}>
+    <Box py={4} px={0} >
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <DashboardHeader title="Complete business details" Icon={CustomerService} />
-          {tickets.map(item => <TicketCard ticket={item} key={item.id} />)}
+          <Box sx={{ background: 'linear-gradient(180deg, rgba(62, 61, 69, 0.48) 0%, rgba(32, 32, 32, 0.64) 100%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px' }}>
+            <Box sx={{p:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px' }}>
+              <DashboardHeader title="Complete business details" Icon={CustomerService} />
+              <Box sx={{p:4, background: 'linear-gradient(92.78deg, #3084FF 39.5%, #1D4F99 100%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px 15px 0px 0px' }}>
+                <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', fontSize:'24px', color:'#fff'}}>
+                  Begin your simulation
+                </Typography>
+              </Box>
+              <Box sx={{p:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius:' 0px 0px 15px 15px;' }}>
+                {tickets.map(item => <TicketCard ticket={item} key={item.id} />)}
+              </Box>
+              
+            </Box>
+          </Box>
+          
         </Grid>
 
         <Grid item md={6} xs={12}>

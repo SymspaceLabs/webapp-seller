@@ -22,10 +22,9 @@ export default function VendorDashboardLayout({
       }
         <DashboardNavbar />
 
-        {
-        /* MAIN CONTENT AREA */
-      }
-        <Container maxWidth="lg">{children}</Container>
+        {/* MAIN CONTENT AREA */}
+        {children}
+        {/* <Container maxWidth="lg"></Container> */}
       </BodyWrapper>
     </LayoutProvider>;
 }

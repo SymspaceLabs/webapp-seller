@@ -9,16 +9,8 @@ export default function DashboardNavbar() {
   return <DashboardNavbarRoot position="sticky">
       <Container maxWidth="xl">
         <StyledToolBar disableGutters>
-          {
-          /* BROWSE WEBSITE & TOGGLE BUTTON */
-        }
           <LeftContent />
-
           <Box flexGrow={1} />
-
-          {
-          /* PROFILE & NOTIFICATION BUTTONS AREA */
-        }
           <RightContent />
         </StyledToolBar>
       </Container>

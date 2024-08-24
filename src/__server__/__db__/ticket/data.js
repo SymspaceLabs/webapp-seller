@@ -217,27 +217,29 @@ export const messageList = [{
 export const businessDetailsList = [{
   id: "40279d09-b80f-42e2-b271-7febbcab5bf0",
   slug: "form-1",
-  title: "Essential Business Information",
+  title: "Verify your business",
 }, {
   id: "1241aaaa-c801-4ffa-b05f-7379a0012e6f",
   slug: "form-2",
-  title: "Industry-Specific Questions",
+  title: "Payment Method",
 
 }, {
   id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
   slug: "form-3",
-  title: "3D Models and Augmented Reality",
-  }, {
-  id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
-  slug: "form-4",
-  title: "Engaging Underserved Communities",
-  }, {
-  id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
-  slug: "form-5",
-  title: "Business Verification",
-  }, {
-  id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
-  slug: "form-6",
-  title: "Review and Submit",
-  },];
+  title: "Setup shipping",
+  },
+  // {
+  // id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
+  // slug: "form-4",
+  // title: "Engaging Underserved Communities",
+  // }, {
+  // id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
+  // slug: "form-5",
+  // title: "Business Verification",
+  // }, {
+  // id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
+  // slug: "form-6",
+  // title: "Review and Submit",
+  // },
+];
 

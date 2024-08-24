@@ -19,7 +19,9 @@ const SidebarWrapper = styled("div", {
   transition: "all .2s ease",
   zIndex: theme.zIndex.drawer,
   color: theme.palette.common.white,
-  backgroundColor: theme.palette.grey[900],
+  // backgroundColor: theme.palette.grey[900],
+  backgroundColor: "transparent",
+  padding:10,
   ...(compact && {
     width: 86,
     "&:hover": {
@@ -40,9 +42,19 @@ const NavItemButton = styled(ButtonBase, {
   padding: "0 12px 0 16px",
   justifyContent: "flex-start",
   transition: "all 0.15s ease",
+  fontFamily:'Elemental End',
+  textTransform:'lowercase',
+  ":hover": {
+    background: "linear-gradient(92.78deg, #3084FF 39.5%, #1D4F99 100%)",
+    borderRadius: "60px",
+    color: "#fff",
+  },
   ...(active && {
-    color: theme.palette.info.main,
-    backgroundColor: alpha(theme.palette.grey[800], 0.6),
+      background: "linear-gradient(92.78deg, #3084FF 39.5%, #1D4F99 100%)",
+      borderRadius: "60px",
+      color: "#fff",
+      // color: theme.palette.info.main,
+    // backgroundColor: alpha(theme.palette.grey[800], 0.6),
     "& .MuiSvgIcon-root .secondary": {
       color: theme.palette.info.main,
       opacity: 1
