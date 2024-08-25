@@ -8,11 +8,13 @@ export const DashboardNavbarRoot = styled(AppBar)(({
   theme
 }) => ({
   zIndex: 11,
-  paddingTop: "1rem",
-  paddingBottom: "1rem",
-  backgroundColor: "#ffffff",
   boxShadow: theme.shadows[2],
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
+  background:'linear-gradient(180deg, rgba(62, 61, 69, 0.48) 0%, rgba(32, 32, 32, 0.64) 100%)',
+  marginTop:"1rem",
+  borderRadius: '15px 15px 0 0', overflow:'hidden', 
+  // boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)',
+  backdropFilter:' blur(12px)',
 }));
 export const StyledToolBar = styled(Toolbar)({
   "@media (min-width: 0px)": {

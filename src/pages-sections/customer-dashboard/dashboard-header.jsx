@@ -10,7 +10,7 @@ import SideNav from "../../components/side-nav";
 import { H2 } from "../../components/Typography";
 import FlexBox from "../../components/flex-box/flex-box";
 import { Navigation } from "../../components/layouts/customer-dashboard";
-import { IconButton } from "@mui/material"; // STYLED COMPONENT
+import { IconButton, Typography } from "@mui/material"; // STYLED COMPONENT
 
 const StyledBox = styled("div")(({
   theme
@@ -50,11 +50,11 @@ export default function DashboardHeader({
   return <StyledBox>
       <FlexBox mt={2} className="headerHold">
         <FlexBox alignItems="center" gap={1.5}>
-          {Icon && <Icon color="primary" />}
+          {/* {Icon && <Icon color="primary" />} */}
 
-          <H2 my={0} lineHeight={1} ellipsis>
+          {/* <Typography my={0} lineHeight={1} ellipsis sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff', fontSize:40}}>
             {title}
-          </H2>
+          </Typography> */}
         </FlexBox>
 
         <div className="sidenav">
