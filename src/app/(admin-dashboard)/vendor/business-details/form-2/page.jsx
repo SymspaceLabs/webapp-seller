@@ -1,6 +1,6 @@
 import { Form2 } from "../../../../../pages-sections/vendor-dashboard/business-details/page-view";
 export const metadata = {
-  title: "Product Create - Bazaar Next.js E-commerce Template",
+  title: "Create Product",
   description: `Bazaar is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store`,
   authors: [{
     name: "UI-LIB",

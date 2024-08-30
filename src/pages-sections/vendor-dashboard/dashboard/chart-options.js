@@ -39,7 +39,7 @@ export const weeklyChartOptions = theme => ({
       show: false,
       style: {
         fontWeight: 500,
-        colors: theme.palette.text.disabled
+        colors: '#fff'
       }
     }
   },
@@ -51,7 +51,7 @@ export const weeklyChartOptions = theme => ({
     labels: {
       style: {
         fontWeight: 500,
-        colors: theme.palette.text.disabled
+        colors: '#fff'
       }
     }
   },
@@ -149,7 +149,7 @@ export const totalOrderChartOptions = theme => ({
       show: false,
       style: {
         fontWeight: 500,
-        colors: theme.palette.text.disabled
+        colors: '#fff'
       }
     }
   },
@@ -161,7 +161,7 @@ export const totalOrderChartOptions = theme => ({
     labels: {
       style: {
         fontWeight: 500,
-        colors: theme.palette.text.disabled
+        colors: '#fff'
       }
     }
   },
@@ -272,7 +272,7 @@ export const analyticsChartOptions = (theme, categories) => ({
     labels: {
       style: {
         fontSize: "14px",
-        colors: theme.palette.grey[600]
+        colors: '#fff'
       }
     }
   },
@@ -285,7 +285,7 @@ export const analyticsChartOptions = (theme, categories) => ({
     labels: {
       style: {
         fontSize: "14px",
-        colors: theme.palette.grey[600]
+        colors: '#fff'
       },
       formatter: value => `${(value / 1000).toFixed(0)}K`
     }
@@ -354,7 +354,7 @@ export const analyticsChartOptions = (theme, categories) => ({
           show: true,
           style: {
             fontSize: "14px",
-            colors: theme.palette.grey[600]
+            colors: "#fff"
           },
           formatter: value => `${(value / 1000).toFixed(0)}K`
         }
@@ -365,7 +365,7 @@ export const analyticsChartOptions = (theme, categories) => ({
           show: true,
           style: {
             fontSize: "14px",
-            colors: theme.palette.grey[600]
+            colors: "#fff"
           }
         }
       }

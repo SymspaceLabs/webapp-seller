@@ -71,19 +71,15 @@ const ProductsPageView = ({
   } = useMuiTable({
     listData: filteredProducts
   });
-  return <Box py={4}>
+  return (
+    <Box py={4}>
       <H3 mb={2}>Product List</H3>
-
       <SearchArea handleSearch={() => {}} buttonText="Add Product" url="/admin/products/create" searchPlaceholder="Search Product..." />
-
       <Card>
         <Scrollbar autoHide={false}>
-          <TableContainer sx={{
-          minWidth: 900
-        }}>
+          <TableContainer sx={{ minWidth: 900 }}>
             <Table>
               <TableHeader order={order} hideSelectBtn orderBy={orderBy} heading={tableHeading} rowCount={products.length} numSelected={selected.length} onRequestSort={handleRequestSort} />
-
               <TableBody>
                 {filteredList.map((product, index) => <ProductRow key={index} product={product} />)}
               </TableBody>
@@ -95,7 +91,8 @@ const ProductsPageView = ({
           <TablePagination onChange={handleChangePage} count={Math.ceil(products.length / rowsPerPage)} />
         </Stack>
       </Card>
-    </Box>;
+    </Box>
+    );
 };
 
 export default ProductsPageView;

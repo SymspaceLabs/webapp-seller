@@ -49,7 +49,8 @@ const ProductForm = props => {
         handleBlur,
         handleSubmit
       }) => <form onSubmit={handleSubmit}>
-              <Grid container spacing={3} sx={{pr:4}}>
+            <Box sx={{ py:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px' }}>
+              <Grid container spacing={3}>
                 {/*Left Card*/}
                 <Grid item sm={8} xs={12}>
 
@@ -62,7 +63,7 @@ const ProductForm = props => {
                         <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff'}}>
                           Product Name
                         </Typography>
-                        <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px',  },}} fullWidth name="name" color="info" size="medium" placeholder="Enter product name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
+                        <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000' },}} fullWidth name="name" color="info" size="medium" placeholder="Enter product name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
                       </Grid>
 
                       {/*Description*/}
@@ -74,7 +75,7 @@ const ProductForm = props => {
                       </Grid>
 
                       {/*File Upload*/}
-                      {/* <Grid item xs={12}>
+                      <Grid item xs={12}>
                         <DropZone onChange={files => handleChangeDropZone(files)} />
 
                         <FlexBox flexDirection="row" mt={2} flexWrap="wrap" gap={1}>
@@ -85,110 +86,119 @@ const ProductForm = props => {
                               </UploadImageBox>;
                       })}
                         </FlexBox>
-                      </Grid> */}
+                      </Grid>
 
                         {/*Product type*/}
-                      {/* <Grid item sm={12} xs={12}>
-                        <TextField select fullWidth color="info" size="medium" name="category" onBlur={handleBlur} placeholder="Product Type" onChange={handleChange} value={values.category} label="Product Type" SelectProps={{ multiple: true }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
+                        <Grid item sm={12} xs={12}>
+                        <TextField select fullWidth color="info" size="medium" name="category" onBlur={handleBlur} placeholder="Product Type" onChange={handleChange} value={values.category} label="Product Type" SelectProps={{
+                      multiple: true
+                    }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="electronics">Electronics</MenuItem>
                           <MenuItem value="fashion">Fashion</MenuItem>
                         </TextField>
-                      </Grid> */}
+                      </Grid>
                       
 
                       {/*Category*/}
-                      {/* <Grid item sm={12} xs={12}>
+                      <Grid item sm={12} xs={12}>
                         <TextField select fullWidth color="info" size="medium" name="category" onBlur={handleBlur} placeholder="Category" onChange={handleChange} value={values.category} label="Category" SelectProps={{
                       multiple: true
                     }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="electronics">Electronics</MenuItem>
                           <MenuItem value="fashion">Fashion</MenuItem>
                         </TextField>
-                      </Grid> */}
+                      </Grid>
 
                       {/*SubCategory*/}
-                      {/* <Grid item sm={12} xs={12}>
+                      <Grid item sm={12} xs={12}>
                         <TextField select fullWidth color="info" size="medium" name="subcategory" onBlur={handleBlur} placeholder="Category" onChange={handleChange} value={values.category} label="SubCategory" SelectProps={{
                       multiple: true
                     }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="electronics">Electronics</MenuItem>
                           <MenuItem value="fashion">Fashion</MenuItem>
                         </TextField>
-                      </Grid> */}
+                      </Grid>
 
                       {/*SubCategory Item*/}
-                      {/* <Grid item sm={12} xs={12}>
+                      <Grid item sm={12} xs={12}>
                         <TextField select fullWidth color="info" size="medium" name="subcategoryItem" onBlur={handleBlur} placeholder="Category" onChange={handleChange} value={values.category} label="SubCategory Item" SelectProps={{
                       multiple: true
                     }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="electronics">Electronics</MenuItem>
                           <MenuItem value="fashion">Fashion</MenuItem>
                         </TextField>
-                      </Grid> */}
+                      </Grid>
 
                     </Grid>
                   </Card>
 
                   {/*Card 2 : Pricing */}
-                  {/* <Card sx={{ p: 6, mt:5 }}>
+                  <Card sx={{ p: 6, mt:5 }}>
                     <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
                       Pricing
                     </Typography>
 
                     <Grid container spacing={3}>
-                      
-                      <Grid item sm={6} xs={12}> //Regular price
+                      {/*Regular Price*/}
+                      <Grid item sm={6} xs={12}>
                         <TextField fullWidth name="price" color="info" size="medium" type="number" onBlur={handleBlur} value={values.price} label="Regular Price" onChange={handleChange} placeholder="Regular Price" error={!!touched.price && !!errors.price} helperText={touched.price && errors.price} />
                       </Grid>
 
-
-                      <Grid item sm={6} xs={12}> //Sale Price
+                      {/*Sale Price*/}
+                      <Grid item sm={6} xs={12}>
                         <TextField fullWidth color="info" size="medium" type="number" name="sale_price" label="Sale Price" onBlur={handleBlur} onChange={handleChange} placeholder="Sale Price" value={values.sale_price} error={!!touched.sale_price && !!errors.sale_price} helperText={touched.sale_price && errors.sale_price} />
                       </Grid>
 
                     </Grid>
                     <Grid container spacing={1} sx={{mt:2}}>
-
-                      <Grid item sm={4} xs={12}> //Cost per item
+                      {/*Cost per item*/}
+                      <Grid item sm={4} xs={12}>
                         <TextField fullWidth name="price" color="info" size="medium" type="number" onBlur={handleBlur} value={values.price} label="Cost per item" onChange={handleChange} placeholder="Cost per item" error={!!touched.price && !!errors.price} helperText={touched.price && errors.price} />
                       </Grid>
 
-                      <Grid item sm={4} xs={12}> //Profit
+                      {/*Profit*/}
+                      <Grid item sm={4} xs={12}>
                         <TextField fullWidth color="info" size="medium" type="number" name="sale_price" label="Profit" onBlur={handleBlur} onChange={handleChange} placeholder="Profit" value={values.sale_price} error={!!touched.sale_price && !!errors.sale_price} helperText={touched.sale_price && errors.sale_price} />
                       </Grid>
 
-                       <Grid item sm={4} xs={12}> //Margin
+                      {/*Margin*/}
+                      <Grid item sm={4} xs={12}>
                         <TextField fullWidth color="info" size="medium" type="number" name="sale_price" label="Margin" onBlur={handleBlur} onChange={handleChange} placeholder="Margin" value={values.sale_price} error={!!touched.sale_price && !!errors.sale_price} helperText={touched.sale_price && errors.sale_price} />
                       </Grid>
 
                     </Grid>
-                  </Card> */}
+                  </Card>
 
                   {/*Card 3 : Product Variants*/}
-                   {/* <Card sx={{ p: 6, mt:5 }}>
-                   <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
+                  <Card sx={{ p: 6, mt:5 }}>
+                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
                       Product Variants
                     </Typography>
 
                     <Grid container spacing={3}>
                       
-                      <Grid item sm={12} xs={12}> //Color
+                      {/*Color*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="stock" color="info" size="medium" label="Color" placeholder="Color" onBlur={handleBlur} value={values.stock} onChange={handleChange} error={!!touched.stock && !!errors.stock} helperText={touched.stock && errors.stock} />
                       </Grid>
 
-                      <Grid item sm={12} xs={12}> //Size
+                      {/*Size*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="tags" label="Size" color="info" size="medium" placeholder="Size" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
                       </Grid>
 
-                      <Grid item sm={12} xs={12}> //Material
+                      {/*Material*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="tags" label="Material" color="info" size="medium" placeholder="Material" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
                       </Grid>
 
-                      <Grid item sm={12} xs={12}> //Dimension
+                      {/*Dimension*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="tags" label="Dimension" color="info" size="medium" placeholder="Dimension" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
                       </Grid>
 
-                      <Grid item sm={12} xs={12}> //Insurance
+                      {/*Insurance*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="tags" label="Insurance" color="info" size="medium" placeholder="Insurance" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
                       </Grid>
 
@@ -198,15 +208,15 @@ const ProductForm = props => {
                         </Button>
                       </Grid>
                     </Grid>
-                  </Card> */}
+                  </Card>
 
 
                 </Grid>
 
                 {/*Right Card*/}
                 <Grid item sm={4} xs={12}>
-                  <Card sx={{ p: 4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)',  borderRadius: '15px'   }}>
-                    <Typography sx={{ fontFamily: 'Elemental End', textTransform:'lowercase', color:'#fff', fontSize: 14, pb:2 }} >
+                  <Card sx={{ p: 6 }}>
+                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
                       Status
                     </Typography>
                     <Grid container spacing={3}>
@@ -221,13 +231,14 @@ const ProductForm = props => {
                       </Grid>
                     </Grid>
                   </Card>
-                  {/* <Card sx={{ p: 6, mt:5, background:'transparent'  }}>
+                  <Card sx={{ p: 6, mt:5 }}>
                     <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
                       Product Organization
                     </Typography>
                     <Grid container spacing={3}>
 
-=                      <Grid item sm={12} xs={12}> //Product Type
+                      {/*Product Type*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField select fullWidth color="info" size="medium" name="status" onBlur={handleBlur} placeholder="Product Type" onChange={handleChange} value={values.category} label="Product Type" SelectProps={{ multiple: true }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="active">Active</MenuItem>
                           <MenuItem value="Inactive">Inactive</MenuItem>
@@ -235,13 +246,15 @@ const ProductForm = props => {
                         </TextField>
                       </Grid>
 
-                      <Grid item sm={12} xs={12}> //Tags
+                      {/*Tags*/}
+                      <Grid item sm={12} xs={12}>
                         <TextField fullWidth name="tags" label="Tags" color="info" size="medium" placeholder="Tags" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
                       </Grid>
                     </Grid>
-                  </Card> */}
+                  </Card>
                 </Grid>
               </Grid>
+            </Box>
           </form>}
       </Formik>;
 };

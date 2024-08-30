@@ -3,14 +3,16 @@ import FlexBox from "../../../../components/flex-box/flex-box"; // Local CUSTOM 
 
 import AccountPopover from "./account-popover";
 import NotificationsPopover from "./notification-popover"; // STYLED COMPONENTS
+import ButtonPopover from "./button-popover";
 
 import { StyledInputBase } from "./styles";
 export default function RightContent() {
   return <FlexBox alignItems="center" gap={2}>
-      <StyledInputBase placeholder="Search anything..." startAdornment={<Search sx={{
-      color: "grey.500"
-    }} />} />
-
+      <StyledInputBase placeholder="Search anything..." startAdornment={
+        <Search sx={{ color: "grey.500"}} />
+        }
+      />
+      <ButtonPopover />
       <NotificationsPopover />
       <AccountPopover />
     </FlexBox>;
