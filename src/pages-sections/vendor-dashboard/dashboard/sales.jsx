@@ -10,6 +10,7 @@ import Card2 from "./card-2"; // CHART OPTIONS
 import * as options from "./chart-options"; // CUSTOM UTILS LIBRARY FUNCTION
 
 import { currency } from "../../../lib";
+import { Box } from "@mui/material";
 
 const Sales = () => {
   const theme = useTheme(); // weekly chart series
@@ -28,9 +29,9 @@ const Sales = () => {
         /* WEEKLY SALE CHART */
       }
         <Grid item lg={3} md={6} xs={12}>
-          <Card2 title="Weekly Sales" percentage="25.25%" amount={currency(10240, 0)}>
-            <ApexChart type="bar" height={100} series={series} options={options.weeklyChartOptions(theme)} />
-          </Card2>
+            <Card2 title="Weekly Sales" percentage="25.25%" amount={currency(10240, 0)}>
+              <ApexChart type="bar" height={100} series={series} options={options.weeklyChartOptions(theme)} />
+            </Card2>
         </Grid>
 
         {

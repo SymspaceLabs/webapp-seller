@@ -54,9 +54,7 @@ export default function SidebarAccordion({
     };
   }, [find, COMPACT]);
   return <NavExpandRoot className="subMenu">
-      <NavItemButton active={hasActive} onClick={handleClick} sx={{
-      justifyContent: "space-between"
-    }}>
+      <NavItemButton active={hasActive} onClick={handleClick} sx={{ justifyContent: "space-between" }}>
         <Box display="flex" alignItems="center">
           {icon ? <ListIconWrapper>
               <item.icon />
@@ -69,7 +67,7 @@ export default function SidebarAccordion({
 
         {badge ? <BadgeValue compact={COMPACT}>{badge.value}</BadgeValue> : null}
 
-        <ChevronRightIcon color="disabled" compact={COMPACT} collapsed={collapsed ? 1 : 0} />
+        <ChevronRightIcon color="disabled" compact={COMPACT} collapsed={collapsed ? 0 : 1} />
       </NavItemButton>
 
       <Collapse in={collapsed} unmountOnExit>

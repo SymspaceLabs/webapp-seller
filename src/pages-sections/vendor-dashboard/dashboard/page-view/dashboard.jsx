@@ -20,7 +20,9 @@ import api2 from "../../../../utils/__api__/ticket";
 
 // DATA TYPES
 import CustomerService from "../../../../icons/CustomerService";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
+import { ArrowDownward, ChevronRight } from "@mui/icons-material";
+import styled from "@mui/material/styles/styled"; // LOCAL CUSTOM HOOK
 
 const DashboardPageView = () => {
   const [cardList, setCardList] = useState([]);
@@ -28,6 +30,9 @@ const DashboardPageView = () => {
   const [recentPurchase, setRecentPurchase] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [tickets2, setTickets2] = useState(tickets2Data);
+  const [collapsed, setCollapsed] = useState(false);
+  const [collapsedAnnouncement, setCollapsedAnnouncement] = useState(false);
+
 
 
   useEffect(() => {
@@ -51,6 +56,11 @@ const DashboardPageView = () => {
     fetchData();
   }, []);
 
+  const handleClick = () => setCollapsed(state => !state);
+  const handleAnnouncementToggle = () => setCollapsedAnnouncement(!collapsedAnnouncement);
+
+
+
   return (
     <Box px={0} >
       <Grid container spacing={3}>
@@ -58,25 +68,35 @@ const DashboardPageView = () => {
           <Box sx={{ background: 'linear-gradient(180deg, rgba(62, 61, 69, 0.48) 0%, rgba(32, 32, 32, 0.64) 100%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '0 0 15px 15px', overflow:'hidden' }}>
             <Box sx={{ pb:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '0 0 15px  15px' }}>
                 <Box sx={{px:4}}>
-                  <DashboardHeader title="Welcome, Zayden" Icon={CustomerService} />
+                  <DashboardHeader />
                   <Box sx={{p:4, background: 'linear-gradient(92.78deg, #3084FF 39.5%, #1D4F99 100%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px 15px 0px 0px' }}>
                     <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', fontSize:'24px', color:'#fff'}}>
                       Begin your simulation
                     </Typography>
                   </Box>
                   <Box sx={{p:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius:' 0px 0px 15px 15px;' }}>
-                    {tickets.map(item => <TicketCard ticket={item} key={item.id} />)}
+                    {collapsed && tickets.map(item => <TicketCard ticket={item} key={item.id} />)}
+                    <Box sx={{ display:'flex', justifyContent:'center', width:'100%' }}>
+                        <IconButton onClick={handleClick}>
+                          <ChevronRightIcon color="disabled" collapsed={collapsed ? 0 : 1} />
+                        </IconButton>
+                    </Box>
                   </Box>
                 </Box>
                 <Box sx={{px:4}}>
-                  <DashboardHeader title="Welcome, Zayden" Icon={CustomerService} />
+                  <DashboardHeader />
                   <Box sx={{p:4, background: 'linear-gradient(92.78deg, #3084FF 39.5%, #1D4F99 100%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius: '15px 15px 0px 0px' }}>
                     <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', fontSize:'24px', color:'#fff'}}>
                       Announcements
                     </Typography>
                   </Box>
                   <Box sx={{p:4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)', borderRadius:' 0px 0px 15px 15px;' }}>
-                    {tickets2.map(item => <TicketCard ticket={item} key={item.id} />)}
+                    {collapsedAnnouncement && tickets2.map(item => <TicketCard ticket={item} key={item.id} fontSize="18px" />)}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                      <IconButton onClick={handleAnnouncementToggle}>
+                        <ChevronRightIcon color="disabled" collapsed={collapsedAnnouncement ? 0 : 1} />
+                      </IconButton>
+                    </Box>
                   </Box>
                 </Box>
             </Box>
@@ -87,9 +107,9 @@ const DashboardPageView = () => {
           <WelcomeCard />
         </Grid> */}
 
-        {/* <Grid container item md={6} xs={12} spacing={3}>
+        <Grid container item xs={12} spacing={3}>
           {cardList.map(item => (
-            <Grid item md={6} sm={6} xs={12} key={item.id}>
+            <Grid item  lg={3} md={6} xs={12} key={item.id}>
               <Card1
                 title={item.title}
                 color={item.color}
@@ -100,11 +120,11 @@ const DashboardPageView = () => {
               />
             </Grid>
           ))}
-        </Grid> */}
+        </Grid>
 
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <Sales />
-        </Grid> */}
+        </Grid>
 
         {/* ANALYTICS AREA */}
         <Grid item xs={12}>
@@ -112,20 +132,37 @@ const DashboardPageView = () => {
         </Grid>
 
         {/* RECENT PURCHASE AREA */}
-        {/* <Grid item md={7} xs={12}>
+        <Grid item md={7} xs={12}>
           <RecentPurchase data={recentPurchase} />
-        </Grid> */}
+        </Grid>
 
         {/* STOCK OUT PRODUCTS */}
-        {/* <Grid item md={5} xs={12}>
+        <Grid item md={5} xs={12}>
           <StockOutProducts data={stockOutProducts} />
-        </Grid> */}
+        </Grid>
       </Grid>
     </Box>
   );
 };
 
 export default DashboardPageView;
+
+const ChevronRightIcon = styled(ChevronRight, {
+  shouldForwardProp: prop => prop !== "collapsed"
+})(({
+  collapsed,
+  theme: {
+    direction
+  }
+}) => ({
+  fontSize: 25,
+  color: "white",
+  transform: collapsed ? "rotate(90deg)" : "rotate(-90deg)",
+  transition: "transform 0.3s cubic-bezier(0, 0, 0.2, 1) 0ms",
+  ...(collapsed && direction === "rtl" && {
+    transform: "rotate(180deg)"
+  })
+}));
 
 const tickets2Data = [{
   id: "40279d09-b80f-42e2-b271-7febbcab5bf0",

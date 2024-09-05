@@ -22,9 +22,7 @@ export default function DashboardSidebar() {
   if (downLg) {
     return <LayoutDrawer open={showMobileSideBar ? true : false} onClose={handleCloseMobileSidebar}>
         <Box p={2} maxHeight={TOP_HEADER_AREA}>
-          <Image alt="Logo" width={105} height={50} src="/assets/images/logo.svg" style={{
-          marginLeft: 8
-        }} />
+          <Image alt="Logo" width={105} height={50} src="/assets/images/logo.svg" style={{ marginLeft: 8 }} />
         </Box>
 
         <MultiLevelMenu />

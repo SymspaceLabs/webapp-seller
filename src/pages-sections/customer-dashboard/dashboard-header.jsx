@@ -35,10 +35,10 @@ const StyledBox = styled("div")(({
 
 // ==============================================================
 export default function DashboardHeader({
-  title,
+  // title,
   buttonText,
   href,
-  Icon
+  // Icon
 }) {
   const isTablet = useMediaQuery(theme => theme.breakpoints.down(1025));
   const HEADER_LINK = <Button href={href} color="primary" LinkComponent={Link} sx={{

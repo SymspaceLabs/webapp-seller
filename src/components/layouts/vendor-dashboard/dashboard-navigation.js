@@ -39,10 +39,8 @@ export const navigation = [{
     }, {
       name: "Product Reviews",
       path: "/vendor/products/reviews"
-    }, {
-      name: "3D Model",
-      path: "/vendor/products/3d-model"
-    }]
+    }
+  ]
   },
 
   //ORDERS
@@ -63,10 +61,13 @@ export const navigation = [{
     name: "Returns",
     icon: duotone.Accounts,
     children: [{
-      name: "Category List",
+      name: "Returns Received",
       path: "/admin/categories"
     }, {
-      name: "Create Category",
+      name: "Returns Complete",
+      path: "/admin/categories/create"
+    }, {
+      name: "Refunds Complete",
       path: "/admin/categories/create"
     }]
   },
