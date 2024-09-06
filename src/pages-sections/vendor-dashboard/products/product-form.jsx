@@ -1,14 +1,17 @@
 import { useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
+
+import { TextField, MenuItem, Box, Card, Typography, Button, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Container } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup"; // GLOBAL CUSTOM COMPONENTS
-import { Box, Card, Typography, Button, Grid } from '@mui/material';
+import {  } from '@mui/material';
 
 import DropZone from "../../../components/DropZone";
 import { FlexBox } from "../../../components/flex-box"; // STYLED COMPONENTS
 
 import { UploadImageBox, StyledClear } from "../styles"; // FORM FIELDS VALIDATION SCHEMA
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import the styles
 
 const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -40,6 +43,9 @@ const ProductForm = props => {
     setFiles(files => files.filter(item => item.name !== file.name));
   };
 
+  const [value, setValue] = useState('');
+
+
   return <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={VALIDATION_SCHEMA}>
         {({
         values,
@@ -59,18 +65,63 @@ const ProductForm = props => {
 
                       {/*Title*/}
                       <Grid item sm={12} xs={12}>
-                        <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff'}}>
+                        <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff', mb:1}}>
                           Product Name
                         </Typography>
                         <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px',  },}} fullWidth name="name" color="info" size="medium" placeholder="Enter product name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
                       </Grid>
 
+                      {/*Product Type*/}
+                      <Grid item sm={12} xs={12} sx={{ mt:2.5 }}>
+                        <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }}>
+                          <FormLabel id="demo-row-radio-buttons-group-label" sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
+                            Product Type
+                          </FormLabel>
+                          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                            <FormControlLabel value="static" control={<Radio />} label="Static" />
+                            <FormControlLabel value="dynamic" control={<Radio />} label="Dynamic" />
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
+
+                      {/*Dimensions*/}
+                      <Grid item sm={12} xs={12} sx={{ mt:2.5 }}>
+                        <Box sx={{ display:'flex', width:'100%', gap:5, alignItems:'center'}}>
+                          <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff', mb:1}}>
+                            Dimensions
+                          </Typography>
+                          <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px',  },}} fullWidth name="name" color="info" size="medium" placeholder="Enter product name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
+                        </Box>
+                      </Grid>
+
+                      {/*Category*/}
+                      <Grid item sm={12} xs={12} sx={{ mt:2.5 }}>
+                        <Box sx={{ display:'flex', width:'100%', gap:5, alignItems:'center'}}>
+                          <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff', mb:1}}>
+                            Category
+                          </Typography>
+                          <TextField select fullWidth size="medium" name="status" onBlur={handleBlur} placeholder="Status" onChange={handleChange} value={values.category} label="Select Status" SelectProps={{ multiple: true}} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category} InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' },}}>
+                            <MenuItem value="clothing">Clothing</MenuItem>
+                            <MenuItem value="Inactive">Inactive</MenuItem>
+                            <MenuItem value="active">Draft</MenuItem>
+                          </TextField>
+                        </Box>
+                      </Grid>
+
                       {/*Description*/}
-                      <Grid item xs={12}>
-                        <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff'}}>
-                          Description
-                        </Typography>
-                        <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000' },}} rows={6} multiline fullWidth color="info" size="medium" name="description" onBlur={handleBlur} onChange={handleChange} placeholder="Enter description" value={values.description} error={!!touched.description && !!errors.description} helperText={touched.description && errors.description} />
+                      <Grid item xs={12} sx={{ mt:2.5 }}>
+                        <FormControl sx={{ width: '100%' }}>
+                          <FormLabel sx={{ mb: 1, fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff' }}>
+                            Description
+                          </FormLabel>
+                          <ReactQuill
+                            theme="snow"
+                            value={value}
+                            onChange={setValue}
+                            style={{ height: '200px', border: '1px solid #ccc' }}
+                          />
+                        </FormControl>
+                        {/* <TextField InputProps={{ style: { backgroundColor: 'white', color:'#000' },}} rows={6} multiline fullWidth color="info" size="medium" name="description" onBlur={handleBlur} onChange={handleChange} placeholder="Enter description" value={values.description} error={!!touched.description && !!errors.description} helperText={touched.description && errors.description} /> */}
                       </Grid>
 
                       {/*File Upload*/}
@@ -242,6 +293,17 @@ const ProductForm = props => {
                   </Card> */}
                 </Grid>
               </Grid>
+              <Container>
+                <Box sx={{ display:'flex', justifyContent:'end', gap:1}}>
+                  <Button variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
+                    Back
+                  </Button>
+                  <Button variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
+                    Next
+                  </Button>
+                </Box>
+              </Container>
+              
           </form>}
       </Formik>;
 };

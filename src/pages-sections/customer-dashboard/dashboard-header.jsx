@@ -47,7 +47,8 @@ export default function DashboardHeader({
   }}>
       {buttonText}
     </Button>;
-  return <StyledBox>
+  return (
+    <StyledBox>
       <FlexBox mt={2} className="headerHold">
         <FlexBox alignItems="center" gap={1.5}>
           {/* {Icon && <Icon color="primary" />} */}
@@ -69,5 +70,6 @@ export default function DashboardHeader({
       </FlexBox>
 
       {isTablet && buttonText ? <Box mt={2}>{HEADER_LINK}</Box> : null}
-    </StyledBox>;
+    </StyledBox>
+  );
 }
