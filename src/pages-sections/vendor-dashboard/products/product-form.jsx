@@ -17,17 +17,20 @@ const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
   category: yup.array().min(1).required("Category is required!"),
   description: yup.string().required("Description is required!"),
-  stock: yup.number().required("Stock is required!"),
-  price: yup.number().required("Price is required!"),
-  sale_price: yup.number().optional(),
-  tags: yup.string().required("Tags is required!")
+  // stock: yup.number().required("Stock is required!"),
+  // price: yup.number().required("Price is required!"),
+  // sale_price: yup.number().optional(),
+  // tags: yup.string().required("Tags is required!"),
+  status: yup.string().required("Status is required!")
 }); // ================================================================
 
 // ================================================================
 const ProductForm = props => {
   const {
     initialValues,
-    handleFormSubmit
+    handleFormSubmit,
+    handleNext,
+    handleBack
   } = props;
   const [files, setFiles] = useState([]); // HANDLE UPDATE NEW IMAGE VIA DROP ZONE
 
@@ -100,7 +103,7 @@ const ProductForm = props => {
                           <Typography sx={{fontFamily:'Elemental End', textTransform:'lowercase', color:'#fff', mb:1}}>
                             Category
                           </Typography>
-                          <TextField select fullWidth size="medium" name="status" onBlur={handleBlur} placeholder="Status" onChange={handleChange} value={values.category} label="Select Status" SelectProps={{ multiple: true}} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category} InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' },}}>
+                          <TextField select fullWidth size="medium" name="category" onBlur={handleBlur} placeholder="Category" onChange={handleChange} value={values.category} label="Select Category" SelectProps={{ multiple: false}} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category} InputProps={{ style: { backgroundColor: 'white', color:'#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' },}}>
                             <MenuItem value="clothing">Clothing</MenuItem>
                             <MenuItem value="Inactive">Inactive</MenuItem>
                             <MenuItem value="active">Draft</MenuItem>
@@ -262,43 +265,23 @@ const ProductForm = props => {
                     </Typography>
                     <Grid container spacing={3}>
                       <Grid item sm={12} xs={12}>
-                        <TextField select fullWidth color="info" size="medium" name="status" onBlur={handleBlur} placeholder="Status" onChange={handleChange} value={values.category} label="Select Status" SelectProps={{
-                      multiple: true
-                    }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
+                        <TextField select fullWidth color="info" size="medium" name="status" onBlur={handleBlur} placeholder="Status" onChange={handleChange} value={values.status} label="Select Status" SelectProps={{multiple: false}} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
                           <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="Inactive">Inactive</MenuItem>
-                          <MenuItem value="active">Draft</MenuItem>
+                          <MenuItem value="inactive">Inactive</MenuItem>
+                          <MenuItem value="draft">Draft</MenuItem>
                         </TextField>
                       </Grid>
                     </Grid>
                   </Card>
-                  {/* <Card sx={{ p: 6, mt:5, background:'transparent'  }}>
-                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: 14, fontWeight: 'bold', pb:2 }} >
-                      Product Organization
-                    </Typography>
-                    <Grid container spacing={3}>
 
-=                      <Grid item sm={12} xs={12}> //Product Type
-                        <TextField select fullWidth color="info" size="medium" name="status" onBlur={handleBlur} placeholder="Product Type" onChange={handleChange} value={values.category} label="Product Type" SelectProps={{ multiple: true }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="Inactive">Inactive</MenuItem>
-                          <MenuItem value="active">Draft</MenuItem>
-                        </TextField>
-                      </Grid>
-
-                      <Grid item sm={12} xs={12}> //Tags
-                        <TextField fullWidth name="tags" label="Tags" color="info" size="medium" placeholder="Tags" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
-                      </Grid>
-                    </Grid>
-                  </Card> */}
                 </Grid>
               </Grid>
               <Container>
                 <Box sx={{ display:'flex', justifyContent:'end', gap:1}}>
-                  <Button variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
+                  <Button onClick={handleBack} variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
                     Back
                   </Button>
-                  <Button variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
+                  <Button onClick={handleNext} variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
                     Next
                   </Button>
                 </Box>
