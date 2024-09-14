@@ -25,7 +25,9 @@ const Card1 = props => {
           {title}
         </Typography>
 
-        <H3 mb={0.3}>{amount1}</H3>
+        <H3 mb={0.3} color="#fff">
+          {amount1}
+        </H3>
 
         <FlexBetween>
           <Paragraph fontWeight={500} color="grey.500">
@@ -35,7 +37,7 @@ const Card1 = props => {
           <FlexBox alignItems="center" color={color}>
             {status === "up" && <ArrowDropUp />}
             {status === "down" && <ArrowDropDown />}
-            <Paragraph fontSize={12}>{percentage}</Paragraph>
+            <Paragraph fontSize={14}>{percentage}</Paragraph>
           </FlexBox>
         </FlexBetween>
       </Card>

@@ -19,10 +19,34 @@ export const navigation = [{
       path: "/vendor/simulation/create"
     }, {
       name: "3D Products",
-      path: "/vendor/simulation/reviews"
+      path: "/vendor/simulation/reviews",
+      children: [
+        {
+          name: "3D Repository",
+          path: "/vendor/products/create/basic-info"
+        },
+        {
+          name: "Generate 3D Model",
+          path: "/vendor/products/create/pricing"
+        },
+        {
+          name: "Request History",
+          path: "/vendor/products/create/inventory"
+        }
+      ]
     }, {
       name: "AR Visual",
-      path: "/vendor/simulation/3d-model"
+      path: "/vendor/simulation/3d-model",
+      children: [
+        {
+          name: "Create AR Visual",
+          path: "/vendor/products/create/basic-info"
+        },
+        {
+          name: "Request History",
+          path: "/vendor/products/create/pricing"
+        },
+      ]
     }]
   },
 
@@ -31,16 +55,16 @@ export const navigation = [{
     name: "Products",
     icon: duotone.Products,
     children: [{
-      name: "Product List",
-      path: "/vendor/products"
-    }, {
-      name: "Create Product",
-      path: "/vendor/products/create"
-    }, {
-      name: "Product Reviews",
-      path: "/vendor/products/reviews"
-    }
-  ]
+        name: "Product List",
+        path: "/vendor/products"
+      }, {
+        name: "Create Product",
+        path: "/vendor/products/create"
+      }, {
+        name: "Product Reviews",
+        path: "/vendor/products/reviews"
+      }
+    ]
   },
 
   //ORDERS
@@ -51,7 +75,10 @@ export const navigation = [{
       name: "Order List",
       path: "/admin/orders"
     }, {
-      name: "Order Details",
+      name: "Orders Pending",
+      path: "/admin/orders/f0ba538b-c8f3-45ce-b6c1-209cf07ba5f8"
+    }, {
+      name: "Orders Complete",
       path: "/admin/orders/f0ba538b-c8f3-45ce-b6c1-209cf07ba5f8"
     }]
   },
@@ -76,13 +103,7 @@ export const navigation = [{
   {
     name: "Earnings",
     icon: duotone.Apps,
-    children: [{
-      name: "Brand List",
-      path: "/admin/brands"
-    }, {
-      name: "Create Brand",
-      path: "/admin/brands/create"
-    }]
+    path: "/vendor/reviews"
   },
 
   //REVIEW
@@ -133,42 +154,82 @@ export const navigation = [{
 
   // SETTINGS
   {
-    name: "Setting",
+    name: "Settings",
     icon: duotone.SiteSetting,
-    path: "/vendor/shop-settings"
+    children: [{
+      name: "Company Page",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Account Settings",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Notification Settings",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Manage Contacts",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Returns",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Customer Service",
+      path: "/vendor/shop-settings"
+    }, {
+      name: "Taxes",
+      path: "/vendor/shop-settings"
+    }]
   },
 
   //TEAM
   {
     name: "Team",
     icon: duotone.ProjectChart,
-    children: [{
-      name: "Earning History",
-      path: "/vendor/earning-history"
-    }, {
-      name: "Payouts",
-      path: "/vendor/payouts"
-    }, {
-      name: "Payout Request",
-      path: "/vendor/payout-requests"
-    }, {
-      name: "Payout Settings",
-      path: "/vendor/payout-settings"
-    }]
+    path: "/vendor/earning-history"
+
   },
 
   //SUPPORT
   {
-    name: "Support Tickets",
+    name: "Support",
     icon: duotone.ElementHub,
-    path: "/vendor/support-tickets"
+    children: [{
+      name: "Billing",
+      path: "/vendor/earning-history"
+    }, {
+      name: "Tickets",
+      path: "/vendor/payouts"
+    }, {
+      name: "Help",
+      path: "/vendor/payout-requests"
+    }, {
+      name: "Docs",
+      path: "/vendor/payout-settings"
+    }, {
+      name: "Contact Us",
+      path: "/vendor/payout-settings"
+    }]
   },
 
   //INTEGRATION
  {
   name: "Integration",
   icon: duotone.Refund,
-  path: "/vendor/refund-request"
+  children: [{
+    name: "Billing",
+    path: "/vendor/earning-history"
+  }, {
+    name: "Augmented Reality",
+    path: "/vendor/payouts"
+  }, {
+    name: "APIs",
+    path: "/vendor/payout-requests"
+  }, {
+    name: "Apps",
+    path: "/vendor/payout-settings"
+  }, {
+    name: "Connected Apps",
+    path: "/vendor/payout-settings"
+  }]
 },
   
 // {

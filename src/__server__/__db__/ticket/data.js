@@ -218,15 +218,18 @@ export const businessDetailsList = [{
   id: "40279d09-b80f-42e2-b271-7febbcab5bf0",
   slug: "form-1",
   title: "Verify your business",
+  buttonTitle:'Review'
 }, {
   id: "1241aaaa-c801-4ffa-b05f-7379a0012e6f",
   slug: "form-2",
   title: "Payment Method",
+  buttonTitle:'Get Paid'
 
 }, {
   id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
   slug: "form-3",
   title: "Setup shipping",
+  buttonTitle:'Start Shipping'
   },
   // {
   // id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",

@@ -16,6 +16,7 @@ export default function TicketCard({
     id,
     slug,
     title,
+    buttonTitle,
   } = ticket || {};
   return (
   // <Link href={`/vendor/business-details/${slug}`} key={id}>
@@ -37,7 +38,7 @@ export default function TicketCard({
           </FlexBox> */}
         </div>
         <Button sx={{background: 'rgba(48, 132, 255, 0.1)', border: '2px solid #FFFFFF', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', fontFamily:'Elemental End', textTransform:'lowercase', fontSize:'20px', color:'#fff', borderRadius: '59px', padding: '10px 46px', gap: '5px' }}>
-            Review
+          {buttonTitle}
         </Button>
 
         {/* <IconButton>

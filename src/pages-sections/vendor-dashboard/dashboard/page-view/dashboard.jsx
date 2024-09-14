@@ -30,8 +30,8 @@ const DashboardPageView = () => {
   const [recentPurchase, setRecentPurchase] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [tickets2, setTickets2] = useState(tickets2Data);
-  const [collapsed, setCollapsed] = useState(false);
-  const [collapsedAnnouncement, setCollapsedAnnouncement] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const [collapsedAnnouncement, setCollapsedAnnouncement] = useState(true);
 
 
 
@@ -169,14 +169,18 @@ const tickets2Data = [{
   id: "40279d09-b80f-42e2-b271-7febbcab5bf0",
   slug: "form-1",
   title: "SYMSPACE has now partnered with organizations in all 50 states within the u.s.",
+  buttonTitle: "Read more",
+
 }, {
   id: "1241aaaa-c801-4ffa-b05f-7379a0012e6f",
   slug: "form-2",
   title: "partners are now able to leverage the automated ad feature to enhance marketing ads",
+  buttonTitle: "Try it out",
 
 }, {
   id: "5c609a0c-f695-4d63-8b51-e57d3f0041c0",
   slug: "form-3",
   title: "new categories added to our marketplace",
+  buttonTitle: "Explore",
   },
 ]

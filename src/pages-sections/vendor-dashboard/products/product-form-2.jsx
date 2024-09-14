@@ -16,7 +16,7 @@ const VALIDATION_SCHEMA = yup.object().shape({
   status: yup.string().required("Status is required!")
 });
 
-const ProductForm = props => {
+const ProductForm2 = props => {
   const {
     initialValues,
     handleFormSubmit,
@@ -193,4 +193,4 @@ const ProductForm = props => {
   </Formik>;
 };
 
-export default ProductForm;
+export default ProductForm2;
