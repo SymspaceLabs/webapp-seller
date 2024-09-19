@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { styled } from '@mui/material/styles';
 import { MuiColorInput } from 'mui-color-input'
 
-
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
@@ -23,6 +22,19 @@ const baseColors = [
   { name: 'Red', hex: '#f44336' },
   { name: 'Blue', hex: '#2196f3' },
   { name: 'Green', hex: '#4caf50' },
+];
+
+const ageGroups = [
+  { name: '0-6 months'   },
+  { name: '6-12 months'  },
+  { name: 'Adults' },
+  { name: 'All ages' },
+];
+
+const genders = [
+  { name: 'Male'   },
+  { name: 'Female' },
+  { name: 'Unisex' },
 ];
 
 const ListItem = styled('li')(({ theme }) => ({
@@ -51,17 +63,13 @@ const ProductForm1 = props => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [color, setColor] = useState('#ffffff');
   const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
+  const [selectedGender, setSelectedGender] = useState([]);
 
-  
+
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
-
-  
-
-
-
-
 
   const handleDelete = (chipToDelete, setChip) => () => {
     setChip((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
@@ -117,6 +125,14 @@ const ProductForm1 = props => {
 
   const availableColors = baseColors.filter(
     (color) => !selectedColors.some((selectedColor) => selectedColor.name === color.name)
+  );
+
+  const availableAgeGroups = ageGroups.filter(
+    (ageGroup) => !selectedAgeGroup.some((selectedAgeGroup) => selectedAgeGroup.name === ageGroup.name)
+  );
+
+  const availableGenders = genders.filter(
+    (gender) => !selectedGender.some((selectedGender) => selectedGender.name === gender.name)
   );
 
 
@@ -221,6 +237,121 @@ const ProductForm1 = props => {
  
                   </Grid>
 
+                  {/* Category Tags */}
+                  <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
+                    <FlexBox gap={1} flexDirection="column">
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                          Category Tags
+                        </Typography>
+                        <Tooltip title="Choose a category for the product">
+                          <IconButton>
+                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    
+                      {/* Age group */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
+                          Age group
+                        </Typography>
+                        <Autocomplete 
+                          multiple
+                          freeSolo 
+                          options={ageGroups.map((option) => option.name)} value={selectedAgeGroup.map((ageGroup) => ageGroup.name)}
+                          onChange={(event, newValue) => {
+                            const updatedAgeGroups = newValue.map((name) => {
+                              const ageGroupObj = ageGroups.find((ageGroup) => ageGroup.name === name) ||
+                                              chipData2.find((ageGroup) => ageGroup.name === name);
+                              return ageGroupObj || { name };
+                            });
+                            setSelectedAgeGroup(updatedAgeGroups);
+                          }}
+                          renderTags={(value, getTagProps) =>
+                            selectedAgeGroup.map((option, index) => (
+                              <Chip
+                                label={option.name}
+                                {...getTagProps({ index })}
+                                onDelete={getTagProps({ index }).onDelete}
+                                color="info"
+                                variant="outlined"
+                                sx={{ color: 'grey' }}
+                              />
+                            ))
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                              placeholder="Select Age group"
+                              sx={{ width: '500px' }}
+                              InputProps={{
+                                ...params.InputProps,
+                                style: {
+                                  backgroundColor: 'white',
+                                },
+                              }}
+                              InputLabelProps={{
+                                style: { color: 'black' },
+                              }}
+                            />
+                          )}
+                        />
+                      </Box>
+                      
+                      {/* Gender */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
+                            Gender
+                        </Typography>
+                        <Autocomplete 
+                          multiple
+                          freeSolo
+                          options={genders.map((option) => option.name)} value={selectedGender.map((gender) => gender.name)}
+                          onChange={(event, newValue) => {
+                            const updatedGenders = newValue.map((name) => {
+                              const genderObj = genders.find((gender) => gender.name === name) ||
+                                              chipData2.find((gender) => gender.name === name);
+                              return genderObj || { name };
+                            });
+                            setSelectedGender(updatedGenders);
+                          }}
+                          renderTags={(value, getTagProps) =>
+                            selectedGender.map((option, index) => (
+                              <Chip
+                                label={option.name}
+                                {...getTagProps({ index })}
+                                onDelete={getTagProps({ index }).onDelete}
+                                color="info"
+                                variant="outlined"
+                                sx={{ color: 'grey' }}
+                              />
+                            ))
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                              placeholder="Select Gender"
+                              sx={{ width: '500px' }}
+                              InputProps={{
+                                ...params.InputProps,
+                                style: {
+                                  backgroundColor: 'white',
+                                },
+                              }}
+                              InputLabelProps={{
+                                style: { color: 'black' },
+                              }}
+                            />
+                          )}
+                        />
+
+                      </Box>
+                    </FlexBox>
+                  </Grid>
+
 
                   {/* Description */}
                     <Grid item xs={12} sx={{ mt: 2.5 }}>
@@ -249,7 +380,7 @@ const ProductForm1 = props => {
                       </FormControl>
                     </Grid>
 
-                  {/* Variant */}
+                  {/* Product Variant */}
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
                     <FlexBox gap={1} flexDirection="column">
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -376,6 +507,13 @@ const ProductForm1 = props => {
                       </Box>
                     </FlexBox>
                   </Grid>
+                 
+                  <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
+                    <ProductVariants />
+                  </Grid>
+
+                  
+
                 </Grid>
               </Card>
             </Grid>
@@ -621,6 +759,99 @@ const MultiLevelAutocomplete = () => {
           </MenuItem>
         ))}
       </Menu>
+    </Box>
+  );
+};
+
+const ProductVariants = () => {
+  const [colors] = useState([
+    { id: 'color_red', name: 'Red' },
+    { id: 'color_blue', name: 'Blue' },
+    { id: 'color_green', name: 'Green' },
+  ]);
+
+  const [sizes] = useState([
+    { id: 'size_s', name: 'Size S' },
+    { id: 'size_m', name: 'Size M' },
+    { id: 'size_l', name: 'Size L' },
+  ]);
+
+  // Initialize state to track quantity for each color-size combination
+  const [variants, setVariants] = useState(
+    sizes.flatMap((size) =>
+      colors.map((color) => ({
+        color: color.name,
+        size: size.name,
+        quantity: 0,
+      }))
+    )
+  );
+
+  // Handle quantity change for a specific variant
+  const handleQuantityChange = (event, color, size) => {
+    const newQuantity = parseInt(event.target.value, 10) || 0;
+    setVariants(
+      variants.map((variant) =>
+        variant.color === color && variant.size === size
+          ? { ...variant, quantity: newQuantity }
+          : variant
+      )
+    );
+  };
+
+  return (
+    <Box p={3} sx={{  borderRadius: 2, boxShadow: 2 }}>
+      <Typography variant="h5" gutterBottom>
+        Product Variants
+      </Typography>
+
+      <Grid container spacing={2} direction="column">
+        {variants.map((variant, index) => (
+          <Grid
+            item
+            xs={12}
+            key={`${variant.color}-${variant.size}`}
+          >
+            <Box
+              sx={{
+                p: 2,
+                backgroundColor: '#f9f9f9',
+                borderRadius: 1,
+                boxShadow: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="body1">
+                {variant.color} - {variant.size}
+              </Typography>
+              <TextField
+                label="Quantity"
+                type="number"
+                variant="outlined"
+                value={variant.quantity}
+                onChange={(e) =>
+                  handleQuantityChange(e, variant.color, variant.size)
+                }
+                inputProps={{ min: 0 }}
+                sx={{ ml: 2, width: '100px' }}
+              />
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box mt={3}>
+        <Typography variant="h6">Selected Variants and Quantities</Typography>
+        {variants
+          .filter((variant) => variant.quantity > 0)
+          .map((variant, index) => (
+            <Typography key={index}>
+              {variant.color} - {variant.size}: {variant.quantity}
+            </Typography>
+          ))}
+      </Box>
     </Box>
   );
 };
