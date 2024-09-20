@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Avatar, Autocomplete, Popper, TextField, Checkbox, Menu, MenuItem, Box, Card, Typography, Button, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Tooltip, IconButton, Paper, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, ListItemText, List, Collapse, ListItemIcon  } from "@mui/material";
+import React, { useState } from "react";
+import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Tooltip, IconButton, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, } from "@mui/material";
 import { InfoOutlined } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { styled } from '@mui/material/styles';
+
 import { MuiColorInput } from 'mui-color-input'
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ProductVariantsTable from './components/product-variants';
+import SymTextField from './components/SymTextField';
+import SymRadioButton from './components/SymRadioButton';
 
 const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -22,6 +25,14 @@ const baseColors = [
   { name: 'Red', hex: '#f44336' },
   { name: 'Blue', hex: '#2196f3' },
   { name: 'Green', hex: '#4caf50' },
+];
+
+const baseSizes = [
+  { name: 'S' },
+  { name: 'M' },
+  { name: 'L' },,
+  { name: 'XL' },
+  { name: 'XXL' },
 ];
 
 const ageGroups = [
@@ -37,32 +48,17 @@ const genders = [
   { name: 'Unisex' },
 ];
 
-const ListItem = styled('li')(({ theme }) => ({
-  margin: theme.spacing(0.5),
-}));
-
 const ProductForm1 = props => {
-  const {
-    initialValues,
-    handleFormSubmit,
-    handleNext,
-    handleBack
-  } = props;
-  const [files, setFiles] = useState([]);
+  const { initialValues, handleFormSubmit } = props;
+
   const [value, setValue] = useState('');
-  const [chipData, setChipData] = useState([
-    { key: 0, label: 'S' },
-    { key: 1, label: 'M' },
-    { key: 2, label: 'L' },
-    { key: 3, label: 'XL' },
-    { key: 4, label: 'XXL' },
-  ]);
   const [chipData2, setChipData2] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // State to handle dialog visibility
   const [newColor, setNewColor] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
+
   const [color, setColor] = useState('#ffffff');
   const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
 
@@ -70,23 +66,8 @@ const ProductForm1 = props => {
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
-
-  const handleDelete = (chipToDelete, setChip) => () => {
-    setChip((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  };
-
-  const open = Boolean(anchorEl);
-
   
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAddColor = (color) => {
-    setChipData2([...chipData2, { key: chipData2.length, label: color.label, hex: color.hex }]);
-    handleCloseMenu();
-  };
-
+ 
   const handleAddCustomColor = () => {
     if (newColor && color) {
       const customColor = { name: newColor, hex: color };
@@ -108,44 +89,15 @@ const ProductForm1 = props => {
     setColor('#ffffff');
   };
 
-  const handleToggleColor = (color) => {
-    const currentIndex = selectedColors.indexOf(color);
-    const newSelectedColors = [...selectedColors];
 
-    if (currentIndex === -1) {
-      newSelectedColors.push(color);
-      setChipData2([...chipData2, { key: chipData2.length, label: color.label, hex: color.hex }]);
-    } else {
-      newSelectedColors.splice(currentIndex, 1);
-      setChipData2(chipData2.filter((chip) => chip.label !== color.label));
-    }
-
-    setSelectedColors(newSelectedColors);
-  };
-
-  const availableColors = baseColors.filter(
-    (color) => !selectedColors.some((selectedColor) => selectedColor.name === color.name)
-  );
-
-  const availableAgeGroups = ageGroups.filter(
-    (ageGroup) => !selectedAgeGroup.some((selectedAgeGroup) => selectedAgeGroup.name === ageGroup.name)
-  );
-
-  const availableGenders = genders.filter(
-    (gender) => !selectedGender.some((selectedGender) => selectedGender.name === gender.name)
-  );
-
-
-  // Handle color input changes (e.g. when typing manually in the color input)
   const handleColorChange = (newColor) => {
     setColor(newColor);
   };
   
-  // Handle base color selection
   const handleBaseColorChange = (event) => {
     const selectedColor = baseColors.find(color => color.name === event.target.value);
     if (selectedColor) {
-      setColor(selectedColor.hex); // Update the hex code in the color input
+      setColor(selectedColor.hex);
     }
   };
 
@@ -170,22 +122,31 @@ const ProductForm1 = props => {
 
                   {/* Product Name */}
                   <Grid item sm={12} xs={12}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                      <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
-                        Product Name
-                      </Typography>
-                      <Tooltip title="Enter the product's name">
-                        <IconButton>
-                          <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                    <TextField InputProps={{ style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' }}} fullWidth name="name" color="info" size="medium" placeholder="Enter product name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
+                    <SymTextField
+                      label="Product Name"
+                      name="name"
+                      placeholder="Enter product name"
+                      value={values.name}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
+                    />
                   </Grid>
 
                   {/* Product Type */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                    <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }}>
+                    <SymRadioButton
+                        label="Product Type"
+                        name="productType"
+                        id="product-type-label"
+                        value="static"
+                        options={[
+                          { value:"static", label:"Static" },
+                          { value:"dynamic", label:"Dynamic" },
+                        ]}
+                    />
+                    {/* <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <FormLabel id="product-type-label" sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                           Product Type
@@ -200,22 +161,21 @@ const ProductForm1 = props => {
                         <FormControlLabel value="static" control={<Radio />} label="Static" />
                         <FormControlLabel value="dynamic" control={<Radio />} label="Dynamic" />
                       </RadioGroup>
-                    </FormControl>
+                    </FormControl> */}
                   </Grid>
 
                   {/* Dimensions */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
-                        Dimensions
-                      </Typography>
-                      <Tooltip title="Specify the dimensions">
-                        <IconButton>
-                          <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                    <TextField InputProps={{ style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' }}} fullWidth name="dimensions" color="info" size="medium" placeholder="Enter dimensions" value={values.dimensions} onBlur={handleBlur} onChange={handleChange} error={!!touched.dimensions && !!errors.dimensions} helperText={touched.dimensions && errors.dimensions} />
+                    <SymTextField
+                      label="Dimensions"
+                      name="dimensions"
+                      placeholder="Enter dimensions"
+                      value={values.dimensions}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.dimensions && !!errors.dimensions}
+                      helperText={touched.dimensions && errors.dimensions}
+                    />
                   </Grid>
 
                   {/* Category */}
@@ -466,41 +426,49 @@ const ProductForm1 = props => {
                         <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
                           Size
                         </Typography>
-                        <Paper sx={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', p: 0.5, m: 0, width:'500px'  }} component="ul">
-                          {chipData.map((data) => {
-                            return (
-                              <ListItem key={data.key}>
-                                <Chip
-                                  label={data.label}
-                                  onDelete={handleDelete(data, setChipData)}
-                                  color="info"
-                                  variant="outlined"
-                                />
-                              </ListItem>
-                            );
-                          })}
-                        </Paper>
-
-                        <Menu
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleCloseMenu}
-                        >
-                          {availableColors.length > 0 ? (
-                            availableColors.map((color) => (
-                              <MenuItem key={color.label} onClick={() => handleToggleColor(color)}>
-                                <Checkbox
-                                  checked={selectedColors.indexOf(color) !== -1}
-                                  tabIndex={-1}
-                                  disableRipple
-                                />
-                                <ListItemText primary={color.label} />
-                              </MenuItem>
+                        <Autocomplete
+                          multiple
+                          freeSolo
+                          options={baseSizes.map((option) => option.name)} // Options as array of strings
+                          value={selectedSizes.map((size) => size.name)} // Use only names as value for Autocomplete
+                          onChange={(event, newValue) => {
+                            const updatedSizes = newValue.map((name) => {
+                              const sizeObj = baseSizes.find((size) => size.name === name) ||
+                                              chipData2.find((size) => size.name === name); // Handle custom sizes
+                              return sizeObj || { name, hex: '' }; // Handle custom (freeSolo) entries
+                            });
+                            setSelectedSizes(updatedSizes); // Update the full size objects
+                          }}
+                          renderTags={(value, getTagProps) =>
+                            selectedSizes.map((option, index) => (
+                              <Chip
+                                label={option.name}
+                                {...getTagProps({ index })}
+                                onDelete={getTagProps({ index }).onDelete}
+                                color="info"
+                                variant="outlined"
+                                sx={{ color: 'grey' }}
+                              />
                             ))
-                          ) : (
-                            <MenuItem disabled>No more colors available</MenuItem>
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                              placeholder="Select Sizes"
+                              sx={{ width: '500px' }}
+                              InputProps={{
+                                ...params.InputProps,
+                                style: {
+                                  backgroundColor: 'white',
+                                },
+                              }}
+                              InputLabelProps={{
+                                style: { color: 'black' },
+                              }}
+                            />
                           )}
-                        </Menu>
+                        />
                         <Button sx={{ color:'#fff', fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 20px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px'}} >
                           Custom Size
                         </Button>
@@ -509,7 +477,7 @@ const ProductForm1 = props => {
                   </Grid>
                  
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
-                    <ProductVariants />
+                    <ProductVariantsTable />
                   </Grid>
 
                   
@@ -762,100 +730,6 @@ const MultiLevelAutocomplete = () => {
     </Box>
   );
 };
-
-const ProductVariants = () => {
-  const [colors] = useState([
-    { id: 'color_red', name: 'Red' },
-    { id: 'color_blue', name: 'Blue' },
-    { id: 'color_green', name: 'Green' },
-  ]);
-
-  const [sizes] = useState([
-    { id: 'size_s', name: 'Size S' },
-    { id: 'size_m', name: 'Size M' },
-    { id: 'size_l', name: 'Size L' },
-  ]);
-
-  // Initialize state to track quantity for each color-size combination
-  const [variants, setVariants] = useState(
-    sizes.flatMap((size) =>
-      colors.map((color) => ({
-        color: color.name,
-        size: size.name,
-        quantity: 0,
-      }))
-    )
-  );
-
-  // Handle quantity change for a specific variant
-  const handleQuantityChange = (event, color, size) => {
-    const newQuantity = parseInt(event.target.value, 10) || 0;
-    setVariants(
-      variants.map((variant) =>
-        variant.color === color && variant.size === size
-          ? { ...variant, quantity: newQuantity }
-          : variant
-      )
-    );
-  };
-
-  return (
-    <Box p={3} sx={{  borderRadius: 2, boxShadow: 2 }}>
-      <Typography variant="h5" gutterBottom>
-        Product Variants
-      </Typography>
-
-      <Grid container spacing={2} direction="column">
-        {variants.map((variant, index) => (
-          <Grid
-            item
-            xs={12}
-            key={`${variant.color}-${variant.size}`}
-          >
-            <Box
-              sx={{
-                p: 2,
-                backgroundColor: '#f9f9f9',
-                borderRadius: 1,
-                boxShadow: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Typography variant="body1">
-                {variant.color} - {variant.size}
-              </Typography>
-              <TextField
-                label="Quantity"
-                type="number"
-                variant="outlined"
-                value={variant.quantity}
-                onChange={(e) =>
-                  handleQuantityChange(e, variant.color, variant.size)
-                }
-                inputProps={{ min: 0 }}
-                sx={{ ml: 2, width: '100px' }}
-              />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box mt={3}>
-        <Typography variant="h6">Selected Variants and Quantities</Typography>
-        {variants
-          .filter((variant) => variant.quantity > 0)
-          .map((variant, index) => (
-            <Typography key={index}>
-              {variant.color} - {variant.size}: {variant.quantity}
-            </Typography>
-          ))}
-      </Box>
-    </Box>
-  );
-};
-
 
 
 export default ProductForm1;
