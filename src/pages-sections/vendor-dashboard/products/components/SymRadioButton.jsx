@@ -2,7 +2,7 @@ import React from 'react';
 import { FormControl, Box, FormLabel, Tooltip, IconButton, Radio, RadioGroup, FormControlLabel, Typography } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
-const SymRadioButton = ({ label, name, id, value, options }) => {
+const SymRadioButton = ({ label, name, id, value, options, onChange }) => {
     return (
         <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }} >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -15,7 +15,7 @@ const SymRadioButton = ({ label, name, id, value, options }) => {
                 </IconButton>
                 </Tooltip>
             </Box>
-            <RadioGroup row aria-labelledby={id} name={name} value={value}>
+            <RadioGroup row aria-labelledby={id} name={name} value={value}  onChange={onChange}>
                 {options.map((option) => (
                     <FormControlLabel
                         key={option.value}

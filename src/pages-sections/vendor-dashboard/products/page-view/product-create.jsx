@@ -90,7 +90,8 @@ const ProductCreatePageView = () => {
     category: [],
     sale_price: "",
     description: "",
-    status:'draft'
+    status:'draft',
+    productType: "static"
   };
 
   const handleFormSubmit = values => {

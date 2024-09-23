@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Tooltip, IconButton, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, } from "@mui/material";
+import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button, Grid, Tooltip, IconButton, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, } from "@mui/material";
 import { InfoOutlined } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as yup from "yup";
 
 import { MuiColorInput } from 'mui-color-input'
 
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ProductVariantsTable from './components/product-variants';
 import SymTextField from './components/SymTextField';
 import SymRadioButton from './components/SymRadioButton';
+import SymRichTextInputBox from './components/SymRichTextInputBox';
 
 const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -56,7 +56,7 @@ const ProductForm1 = props => {
   const [openDialog, setOpenDialog] = useState(false); // State to handle dialog visibility
   const [newColor, setNewColor] = useState('');
 
-  const [color, setColor] = useState('#ffffff');
+  const [color, setColor] = useState('#fff');
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
@@ -136,32 +136,18 @@ const ProductForm1 = props => {
 
                   {/* Product Type */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                    <SymRadioButton
-                        label="Product Type"
-                        name="productType"
-                        id="product-type-label"
-                        value="static"
-                        options={[
-                          { value:"static", label:"Static" },
-                          { value:"dynamic", label:"Dynamic" },
-                        ]}
+                  <SymRadioButton
+                      label="Product Type"
+                      name="productType"
+                      id="product-type-label"
+                      value={values.productType}  // Controlled by Formik
+                      options={[
+                        { value: "static", label: "Static" },
+                        { value: "dynamic", label: "Dynamic" },
+                      ]}
+                      onChange={handleChange}  // Use Formik's handleChange
                     />
-                    {/* <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <FormLabel id="product-type-label" sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
-                          Product Type
-                        </FormLabel>
-                        <Tooltip title="Select the product type">
-                          <IconButton>
-                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                      <RadioGroup row aria-labelledby="product-type-label" name="productType">
-                        <FormControlLabel value="static" control={<Radio />} label="Static" />
-                        <FormControlLabel value="dynamic" control={<Radio />} label="Dynamic" />
-                      </RadioGroup>
-                    </FormControl> */}
+                    
                   </Grid>
 
                   {/* Dimensions */}
@@ -315,7 +301,7 @@ const ProductForm1 = props => {
 
                   {/* Description */}
                     <Grid item xs={12} sx={{ mt: 2.5 }}>
-                      <FormControl sx={{ width: '100%' }}>
+                      {/* <FormControl sx={{ width: '100%' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                           <FormLabel sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, }}>
                             Description
@@ -337,7 +323,15 @@ const ProductForm1 = props => {
                             border:'1px solid transparent'
                           }}
                         />
-                      </FormControl>
+                      </FormControl> */}
+                      <SymRichTextInputBox
+                          label="Dimensions"
+                          id='rich-editor'
+                          placeholder="Write your description here..." 
+                          value={values.description}
+                          onChange={handleChange}
+                          simple={false}
+                      />
                     </Grid>
 
                   {/* Product Variant */}
