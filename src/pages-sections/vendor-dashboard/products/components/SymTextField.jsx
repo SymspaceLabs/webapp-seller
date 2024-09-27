@@ -3,7 +3,7 @@ import { Box, Typography, Tooltip, IconButton, TextField } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 
-const SymTextField = ({ label, name, placeholder, value, onBlur, onChange, error, helperText }) => {
+const SymTextField = ({ label, name, placeholder, value, onBlur, onChange, error, helperText, multiline=false }) => {
   return (
     <div>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -35,6 +35,8 @@ const SymTextField = ({ label, name, placeholder, value, onBlur, onChange, error
             onChange={onChange}
             error={error}
             helperText={helperText}
+            multiline={multiline}
+            rows={4}
         />
     </div>
   )

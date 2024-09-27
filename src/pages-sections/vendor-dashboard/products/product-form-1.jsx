@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button, Grid, Tooltip, IconButton, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, } from "@mui/material";
+import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button, Grid, Tooltip, IconButton, Chip, Dialog, DialogTitle,  DialogContent, DialogActions, Checkbox } from "@mui/material";
 import { InfoOutlined } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -13,6 +13,7 @@ import ProductVariantsTable from './components/product-variants';
 import SymTextField from './components/SymTextField';
 import SymRadioButton from './components/SymRadioButton';
 import SymRichTextInputBox from './components/SymRichTextInputBox';
+import SymMultiSelectChip from './components/SymMultiSelectChip';
 
 const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -36,16 +37,16 @@ const baseSizes = [
 ];
 
 const ageGroups = [
-  { name: '0-6 months'   },
-  { name: '6-12 months'  },
-  { name: 'Adults' },
-  { name: 'All ages' },
+  { label: '0-6 months', value:'0-6 months'   },
+  { label: '6-12 months', value:'6-12 months'  },
+  { label: 'Adults', value:'adults' },
+  { label: 'All ages', value:'all' },
 ];
 
 const genders = [
-  { name: 'Male'   },
-  { name: 'Female' },
-  { name: 'Unisex' },
+  { label: 'Male', value: 'male'   },
+  { label: 'Female', value: 'female' },
+  { label: 'Unisex', value: 'unisex' },
 ];
 
 const ProductForm1 = props => {
@@ -136,7 +137,7 @@ const ProductForm1 = props => {
 
                   {/* Product Type */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                  <SymRadioButton
+                    <SymRadioButton
                       label="Product Type"
                       name="productType"
                       id="product-type-label"
@@ -151,18 +152,20 @@ const ProductForm1 = props => {
                   </Grid>
 
                   {/* Dimensions */}
-                  <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                    <SymTextField
-                      label="Dimensions"
-                      name="dimensions"
-                      placeholder="Enter dimensions"
-                      value={values.dimensions}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.dimensions && !!errors.dimensions}
-                      helperText={touched.dimensions && errors.dimensions}
-                    />
-                  </Grid>
+                  {values.productType === "static" && (
+                    <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
+                      <SymTextField
+                        label="Dimensions"
+                        name="dimensions"
+                        placeholder="Enter dimensions"
+                        value={values.dimensions}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.dimensions && !!errors.dimensions}
+                        helperText={touched.dimensions && errors.dimensions}
+                      />
+                    </Grid>
+                  )}
 
                   {/* Category */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
@@ -198,139 +201,36 @@ const ProductForm1 = props => {
                       </Box>
                     
                       {/* Age group */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
-                          Age group
-                        </Typography>
-                        <Autocomplete 
-                          multiple
-                          freeSolo 
-                          options={ageGroups.map((option) => option.name)} value={selectedAgeGroup.map((ageGroup) => ageGroup.name)}
-                          onChange={(event, newValue) => {
-                            const updatedAgeGroups = newValue.map((name) => {
-                              const ageGroupObj = ageGroups.find((ageGroup) => ageGroup.name === name) ||
-                                              chipData2.find((ageGroup) => ageGroup.name === name);
-                              return ageGroupObj || { name };
-                            });
-                            setSelectedAgeGroup(updatedAgeGroups);
-                          }}
-                          renderTags={(value, getTagProps) =>
-                            selectedAgeGroup.map((option, index) => (
-                              <Chip
-                                label={option.name}
-                                {...getTagProps({ index })}
-                                onDelete={getTagProps({ index }).onDelete}
-                                color="info"
-                                variant="outlined"
-                                sx={{ color: 'grey' }}
-                              />
-                            ))
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="outlined"
-                              placeholder="Select Age group"
-                              sx={{ width: '500px' }}
-                              InputProps={{
-                                ...params.InputProps,
-                                style: {
-                                  backgroundColor: 'white',
-                                },
-                              }}
-                              InputLabelProps={{
-                                style: { color: 'black' },
-                              }}
-                            />
-                          )}
-                        />
-                      </Box>
+                      <SymMultiSelectChip
+                        options={ageGroups}
+                        selectedItems={selectedAgeGroup}
+                        setSelectedItems={setSelectedAgeGroup}
+                        label="Age group"
+                        allLabel="All ages"
+                      />
                       
                       {/* Gender */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
-                            Gender
-                        </Typography>
-                        <Autocomplete 
-                          multiple
-                          freeSolo
-                          options={genders.map((option) => option.name)} value={selectedGender.map((gender) => gender.name)}
-                          onChange={(event, newValue) => {
-                            const updatedGenders = newValue.map((name) => {
-                              const genderObj = genders.find((gender) => gender.name === name) ||
-                                              chipData2.find((gender) => gender.name === name);
-                              return genderObj || { name };
-                            });
-                            setSelectedGender(updatedGenders);
-                          }}
-                          renderTags={(value, getTagProps) =>
-                            selectedGender.map((option, index) => (
-                              <Chip
-                                label={option.name}
-                                {...getTagProps({ index })}
-                                onDelete={getTagProps({ index }).onDelete}
-                                color="info"
-                                variant="outlined"
-                                sx={{ color: 'grey' }}
-                              />
-                            ))
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="outlined"
-                              placeholder="Select Gender"
-                              sx={{ width: '500px' }}
-                              InputProps={{
-                                ...params.InputProps,
-                                style: {
-                                  backgroundColor: 'white',
-                                },
-                              }}
-                              InputLabelProps={{
-                                style: { color: 'black' },
-                              }}
-                            />
-                          )}
-                        />
+                      <SymMultiSelectChip
+                        options={genders}
+                        selectedItems={selectedGender}
+                        setSelectedItems={setSelectedGender}
+                        label="Gender"
+                        allLabel="Unisex"
+                      />
 
-                      </Box>
                     </FlexBox>
                   </Grid>
 
 
                   {/* Description */}
                     <Grid item xs={12} sx={{ mt: 2.5 }}>
-                      {/* <FormControl sx={{ width: '100%' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <FormLabel sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, }}>
-                            Description
-                          </FormLabel>
-                          <Tooltip title="Provide a detailed description of the product">
-                            <IconButton>
-                              <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                        <ReactQuill
-                          theme="snow"
-                          value={value}
-                          onChange={setValue}
-                          style={{ height: '150px',
-                            backgroundColor: 'white',
-                            color: 'black',
-                            borderRadius: '8px',
-                            border:'1px solid transparent'
-                          }}
-                        />
-                      </FormControl> */}
                       <SymRichTextInputBox
-                          label="Dimensions"
-                          id='rich-editor'
-                          placeholder="Write your description here..." 
-                          value={values.description}
-                          onChange={handleChange}
-                          simple={false}
+                        label="Dimensions"
+                        id='rich-editor'
+                        placeholder="Write your description here..." 
+                        value={values.description}
+                        onChange={handleChange}
+                        simple={false}
                       />
                     </Grid>
 
@@ -348,10 +248,10 @@ const ProductForm1 = props => {
                         </Tooltip>
                       </Box>
                     
-                      {/* Colour */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
-                          Colour
+                      {/* Color */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth: '100px' }}>
+                          Color
                         </Typography>
                         <Autocomplete
                           multiple
@@ -366,10 +266,19 @@ const ProductForm1 = props => {
                             });
                             setSelectedColors(updatedColors); // Update the full color objects
                           }}
+                          renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                              <Checkbox
+                                checked={selected}
+                                style={{ marginRight: 8 }}
+                              />
+                              {option}
+                            </li>
+                          )}
                           renderTags={(value, getTagProps) =>
                             selectedColors.map((option, index) => (
                               <Chip
-                                label={
+                                label={(
                                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Box
                                       sx={{
@@ -380,9 +289,9 @@ const ProductForm1 = props => {
                                         marginRight: 1,
                                       }}
                                     />
-                                    {option.name} {/* Display color name */}
+                                    {option.name}
                                   </Box>
-                                }
+                                )}
                                 {...getTagProps({ index })}
                                 onDelete={getTagProps({ index }).onDelete}
                                 color="info"
@@ -409,15 +318,27 @@ const ProductForm1 = props => {
                             />
                           )}
                         />
-                        <Button onClick={handleOpenDialog} sx={{ color:'#fff', fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 20px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px'}} >
+                        <Button
+                          onClick={handleOpenDialog}
+                          sx={{
+                            color: '#fff',
+                            fontFamily: 'Elemental End',
+                            textTransform: 'lowercase',
+                            padding: '5px 20px',
+                            background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)',
+                            boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)',
+                            backdropFilter: 'blur(50px)',
+                            borderRadius: '12px'
+                          }}
+                        >
                           Custom Color
                         </Button>
                       </Box>
                       {/**/}
                       
                       {/* Size */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth:'100px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, minWidth: '100px' }}>
                           Size
                         </Typography>
                         <Autocomplete
@@ -429,10 +350,19 @@ const ProductForm1 = props => {
                             const updatedSizes = newValue.map((name) => {
                               const sizeObj = baseSizes.find((size) => size.name === name) ||
                                               chipData2.find((size) => size.name === name); // Handle custom sizes
-                              return sizeObj || { name, hex: '' }; // Handle custom (freeSolo) entries
+                              return sizeObj || { name }; // Handle custom (freeSolo) entries
                             });
                             setSelectedSizes(updatedSizes); // Update the full size objects
                           }}
+                          renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                              <Checkbox
+                                checked={selected}
+                                style={{ marginRight: 8 }}
+                              />
+                              {option}
+                            </li>
+                          )}
                           renderTags={(value, getTagProps) =>
                             selectedSizes.map((option, index) => (
                               <Chip
@@ -463,18 +393,33 @@ const ProductForm1 = props => {
                             />
                           )}
                         />
-                        <Button sx={{ color:'#fff', fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 20px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px'}} >
+                        <Button
+                          sx={{
+                            color: '#fff',
+                            fontFamily: 'Elemental End',
+                            textTransform: 'lowercase',
+                            padding: '5px 20px',
+                            background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)',
+                            boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)',
+                            backdropFilter: 'blur(50px)',
+                            borderRadius: '12px'
+                          }}
+                        >
                           Custom Size
                         </Button>
                       </Box>
+
+                      {/**/}
                     </FlexBox>
                   </Grid>
                  
+                 {/* Product Variant Table*/}
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
-                    <ProductVariantsTable />
+                    <ProductVariantsTable
+                      colors={selectedColors.map((color) => color.name)}
+                      sizes={selectedSizes.map((size) => size.name)}
+                    />
                   </Grid>
-
-                  
 
                 </Grid>
               </Card>
@@ -482,31 +427,60 @@ const ProductForm1 = props => {
 
             {/*RIGHT CARD START*/}
             <Grid item sm={4} xs={12}>
-              <Card sx={{ mt:2, p: 4, background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)', boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)', backdropFilter: 'blur(12px)',  borderRadius: '15px'   }}>
-                <Typography sx={{ fontFamily: 'Elemental End', textTransform:'lowercase', color:'#fff', fontSize: 14, pb:2 }} >
+              <Card
+                sx={{
+                  mt: 2,
+                  p: 4,
+                  background:
+                    'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
+                  boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)',
+                  backdropFilter: 'blur(12px)',
+                  borderRadius: '15px',
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: 'Elemental End',
+                    textTransform: 'lowercase',
+                    color: '#fff',
+                    fontSize: 14,
+                    pb: 2,
+                  }}
+                >
                   Status
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12}>
-                    <TextField select fullWidth color="info"
+                    <TextField
+                      select
+                      fullWidth
+                      color="info"
                       size="medium"
                       name="status"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.status}
                       label=""
-                      InputProps={{ style: { backgroundColor: 'white',}}}
+                      InputProps={{ style: { backgroundColor: 'white' } }}
                       SelectProps={{ multiple: false }}
                       error={!!touched.status && !!errors.status}
                       helperText={touched.status && errors.status}
                     >
                       <MenuItem value="draft">Draft</MenuItem>
-                      <MenuItem value="active" disabled>Active</MenuItem>
+                      <Tooltip title="This option is currently disabled" arrow placement="right">
+                        <span>
+                          <MenuItem value="active" disabled>
+                            Active
+                          </MenuItem>
+                        </span>
+                      </Tooltip>
                     </TextField>
                   </Grid>
                 </Grid>
               </Card>
             </Grid>
+
+
             {/*RIGHT CARD ENDS*/}
 
             {/* Dialog for adding new color */}
@@ -528,7 +502,7 @@ const ProductForm1 = props => {
                   </Box>
                   <TextField fullWidth label="" value={newColor} onChange={(e) => setNewColor(e.target.value)} h="Enter a color" InputProps={{ style: { backgroundColor: 'white', color: '#000', borderRadius: '2px', },}} />
 
-                  {/*Colour*/}
+                  {/*Color*/}
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
             Color
@@ -554,7 +528,7 @@ const ProductForm1 = props => {
                   />
 
 
-                  {/*Base colour*/}
+                  {/*Base color*/}
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
             Base color
