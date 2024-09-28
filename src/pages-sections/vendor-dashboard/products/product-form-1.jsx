@@ -52,7 +52,6 @@ const genders = [
 const ProductForm1 = props => {
   const { initialValues, handleFormSubmit } = props;
 
-  const [value, setValue] = useState('');
   const [chipData2, setChipData2] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // State to handle dialog visibility
   const [newColor, setNewColor] = useState('');
@@ -63,12 +62,10 @@ const ProductForm1 = props => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
 
-
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
   
- 
   const handleAddCustomColor = () => {
     if (newColor && color) {
       const customColor = { name: newColor, hex: color };
@@ -84,12 +81,12 @@ const ProductForm1 = props => {
       handleDialogClose();
     }
   };
+
   const handleDialogClose = () => {
     setOpenDialog(false);
     setNewColor('');
     setColor('#ffffff');
   };
-
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -167,6 +164,22 @@ const ProductForm1 = props => {
                     </Grid>
                   )}
 
+                  {/* Product Sizechart */}
+                  {values.productType === "dynamic" && (
+                    <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
+                      <SymTextField
+                        label="Product Sizechart"
+                        name="productSizechart"
+                        placeholder="Enter product sizechart"
+                        value={values.productSizechart}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.productSizechart && !!errors.productSizechart}
+                        helperText={touched.productSizechart && errors.productSizechart}
+                      />
+                    </Grid>
+                  )}
+
                   {/* Category */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap:2  }}>
@@ -183,7 +196,6 @@ const ProductForm1 = props => {
 
                       <MultiLevelAutocomplete />
                     </Box>
- 
                   </Grid>
 
                   {/* Category Tags */}

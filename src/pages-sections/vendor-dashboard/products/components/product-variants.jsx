@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   Table,
@@ -16,7 +16,7 @@ import {
   IconButton 
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Import Info icon
-import InfoIcon from '@mui/icons-material/Info'; // Import InfoIcon
+import SymMoneyTextField from './SymMoneyTextField';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -52,17 +52,17 @@ function generateVariants(colors, sizes) {
 
   if (sizes.length === 0) {
     colors.forEach((color) => {
-      variants.push(createData(color, 0, 0, 1, 0, 0)); // Default supply = 1
+      variants.push(createData(color, 0, 0, 0, 0, 0)); 
     });
   } else if (colors.length === 0) {
     sizes.forEach((size) => {
-      variants.push(createData(size, 0, 0, 1, 0, 0)); // Default supply = 1
+      variants.push(createData(size, 0, 0, 0, 0, 0));
     });
   } else {
     colors.forEach((color) => {
       sizes.forEach((size) => {
         const variant = `${color} - ${size}`;
-        variants.push(createData(variant, 0, 0, 1, 0, 0)); // Default supply = 1
+        variants.push(createData(variant, 0, 0, 0, 0, 0));
       });
     });
   }
@@ -72,7 +72,11 @@ function generateVariants(colors, sizes) {
 
 function ProductVariantsTable({ colors, sizes }) {
   const [rows, setRows] = React.useState([]);
-  const [price, setPrice] = React.useState('');
+  const [price, setPrice] = React.useState(0.00);
+  const [salePrice, setSalePrice] = React.useState(0.00);
+  const [supply, setSupply] = React.useState(0);
+  const [cost, setCost] = React.useState(0.00);
+
 
   React.useEffect(() => {
     const newRows = generateVariants(colors, sizes);
@@ -99,11 +103,7 @@ function ProductVariantsTable({ colors, sizes }) {
 
   const handleInputChange = (e, index, field) => {
     let value = e.target.value;
-  
-    // Remove non-numeric characters except the decimal
     value = value.replace(/[^\d.]/g, '');
-  
-    // Ensure valid decimal input
     const numericValue = parseFloat(value) || 0;
   
     // Update the rows state with the new value
@@ -111,16 +111,7 @@ function ProductVariantsTable({ colors, sizes }) {
     updatedRows[index][field] = numericValue;
     setRows(updatedRows);
   };
-  
-  const formatToTwoDecimals = (value) => {
-    // Ensure the value is a valid number before applying toFixed
-    if (!isNaN(value) && value !== '') {
-      return parseFloat(value).toFixed(2);
-    }
-    return '0.00'; // Default to $0.00 if the value is not a valid number
-  };
-  
-  
+    
 
   const handleMasterInputChange = (e, field) => {
     const value = e.target.value;
@@ -134,17 +125,16 @@ function ProductVariantsTable({ colors, sizes }) {
   const isSelected = (variant) => selected.indexOf(variant) !== -1;
 
   const formatPrice = (value) => {
-    if (!value) return '';
     const formattedValue = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2,
-    }).format(value);
+    }).format(value || 0);
     return formattedValue;
   };
 
-  const calculateProfit = (salePrice, cost, supply) => {
-    return (salePrice - cost) * supply;
+  const calculateProfit = (salePrice = 0, cost = 0, supply = 0) => {
+    return (salePrice - cost) * supply || 0;
   };
 
   const columnWidth = '350px';
@@ -220,52 +210,22 @@ function ProductVariantsTable({ colors, sizes }) {
 
             {/* PRICE - MASTER*/}
             <StyledTableCell align="right">
-              <TextField
-                variant="outlined"
-                size="small"
+              <SymMoneyTextField
                 value={price}
                 onChange={(e) => {
-                  let value = e.target.value;
-                  value = value.replace(/[^0-9.]/g, '');
-                  const decimalIndex = value.indexOf('.');
-                  if (decimalIndex !== -1) {
-                    value = value.substring(0, decimalIndex + 1) + value.substring(decimalIndex + 1).replace(/\./g, '').slice(0, 2);
-                  }
-                  setPrice(value);
-                  handleMasterInputChange({ ...e, target: { ...e.target, value } }, 'price');
-                }}
-                fullWidth
-                InputProps={{
-                  style: { paddingLeft: '8px' },
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      $
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{
-                  inputMode: 'decimal',
+                  setPrice(e.target.value);
+                  handleMasterInputChange({ ...e, target: { ...e.target, price } }, 'price');
                 }}
               />
             </StyledTableCell>
 
             {/* SALE PRICE - MASTER*/}
             <StyledTableCell align="right">
-              <TextField
-                variant="outlined"
-                size="small"
-                onChange={(e) => handleMasterInputChange(e, 'salePrice')}
-                fullWidth
-                InputProps={{
-                  style: { paddingLeft: '8px' },
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      $
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{
-                  inputMode: 'decimal',
+              <SymMoneyTextField
+                value={salePrice}
+                onChange={(e) => {
+                  setSalePrice(e.target.value);
+                  handleMasterInputChange(e, 'salePrice');
                 }}
               />
             </StyledTableCell>
@@ -275,7 +235,12 @@ function ProductVariantsTable({ colors, sizes }) {
               <TextField
                 variant="outlined"
                 size="small"
-                onChange={(e) => handleMasterInputChange(e, 'supply')}
+                value={supply}
+                type="number"
+                onChange={(e) => {
+                  setSupply(e.target.value);
+                  handleMasterInputChange(e, 'supply');
+                }}
                 fullWidth
                 InputProps={{ style: { padding: 0 } }}
               />
@@ -283,7 +248,14 @@ function ProductVariantsTable({ colors, sizes }) {
 
             {/* COST - MASTER*/}
             <StyledTableCell align="right">
-              <TextField
+              <SymMoneyTextField
+                value={cost}
+                onChange={(e) => {
+                  setCost(e.target.value);
+                  handleMasterInputChange(e, 'cost');
+                }}
+              />
+              {/* <TextField
                 variant="outlined"
                 size="small"
                 onChange={(e) => handleMasterInputChange(e, 'cost')}
@@ -299,7 +271,7 @@ function ProductVariantsTable({ colors, sizes }) {
                 inputProps={{
                   inputMode: 'decimal',
                 }}
-              />
+              /> */}
             </StyledTableCell>
 
             {/* PROFIT - MASTER*/}
@@ -341,23 +313,10 @@ function ProductVariantsTable({ colors, sizes }) {
 
                 {/* Price */}
                 <StyledTableCell align="right">
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={row.price} // Remove the $ for display
+                  <SymMoneyTextField
+                    value={row.price}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const formattedValue = value.replace(/[^0-9.]/g, '');
-                      handleInputChange({ ...e, target: { ...e.target, value: formattedValue } }, index, 'price');
-                    }}
-                    fullWidth
-                    InputProps={{
-                      style: { paddingLeft: '8px' },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          $
-                        </InputAdornment>
-                      ),
+                      handleInputChange({ ...e, target: { ...e.target, value: e.target.value } }, index, 'price');
                     }}
                   />
                 </StyledTableCell>
@@ -365,22 +324,9 @@ function ProductVariantsTable({ colors, sizes }) {
 
                 {/* Sale Price */}
                 <StyledTableCell align="right">
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    // Format the salePrice with two decimal places, but store the raw value
+                  <SymMoneyTextField
                     value={row.salePrice}
                     onChange={(e) => handleInputChange(e, index, 'salePrice')}
-                    onBlur={(e) => handleInputChange(e, index, 'salePrice')} // Optionally format onBlur as well
-                    fullWidth
-                    InputProps={{
-                      style: { paddingLeft: '8px' },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          $
-                        </InputAdornment>
-                      ),
-                    }}
                   />
                 </StyledTableCell>
 
@@ -391,6 +337,7 @@ function ProductVariantsTable({ colors, sizes }) {
                   <TextField
                     variant="outlined"
                     size="small"
+                    type="number"
                     value={row.supply}
                     onChange={(e) => handleInputChange(e, index, 'supply')}
                     fullWidth
@@ -399,20 +346,9 @@ function ProductVariantsTable({ colors, sizes }) {
 
                 {/* Cost */}
                 <StyledTableCell align="right">
-                  <TextField
-                    variant="outlined"
-                    size="small"
+                  <SymMoneyTextField
                     value={row.cost}
                     onChange={(e) => handleInputChange(e, index, 'cost')}
-                    fullWidth
-                    InputProps={{
-                      style: { paddingLeft: '8px' },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          $
-                        </InputAdornment>
-                      ),
-                    }}
                   />
                 </StyledTableCell>
 

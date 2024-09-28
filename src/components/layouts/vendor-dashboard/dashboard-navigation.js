@@ -5,7 +5,7 @@ export const navigation = [{
 }, {
   name: "Dashboard",
   icon: duotone.Dashboard,
-  path: "/vendor/dashboard"
+  path: "/"
 },
   //SIMULATION
   {
@@ -244,5 +244,5 @@ export const navigation = [{
 {
   name: "Logout",
   icon: duotone.Session,
-  path: "/"
+  path: "/logout"
 }];

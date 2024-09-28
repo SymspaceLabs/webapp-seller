@@ -49,6 +49,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-i18next": "^14.0.1",
+    "react-number-format": "^5.4.2",
     "react-quill": "^2.0.0",
     "react-scroll": "^1.9.0",
     "react-slick": "^0.30.1",
