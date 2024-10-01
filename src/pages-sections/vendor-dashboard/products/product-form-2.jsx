@@ -9,22 +9,55 @@ import DropZone from "../../../components/DropZone";
 import { UploadImageBox, StyledClear } from "../styles"; // FORM FIELDS VALIDATION SCHEMA
 import { InfoOutlined } from "@mui/icons-material";
 import { SortableContainer, SortableElement, arrayMove } from "react-sortable-hoc";
+import DropZone3D from './components/DropZone3D';
 
-const SortableItem = SortableElement(({ file, index, handleFileDelete }) => (
-  <UploadImageBox key={index}>
+// SortableItem component to render each image with label and highlight effect
+const SortableItem = SortableElement(({ file, index, isDragging, selected, handleClick, handleFileDelete }) => (
+  <UploadImageBox 
+    key={index} 
+    onClick={() => handleClick(index)} 
+    sx={{
+      position: 'relative',
+      border: selected ? '3px solid white' : 'none', // Highlight on click
+      opacity: isDragging ? 0.7 : 1, // Dim while dragging
+      cursor: 'grab',
+    }}
+  >
+    {/* Image with numbered label */}
     <Box component="img" src={file.preview} width="100%" />
+    <Typography 
+      variant="caption" 
+      sx={{
+        position: 'absolute',
+        top: 8,
+        left: 8,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        color: 'white',
+        padding: '2px 5px',
+        borderRadius: '4px',
+      }}
+    >
+      {index + 1} {/* Label with the index number */}
+    </Typography>
     <StyledClear onClick={() => handleFileDelete(file)} />
   </UploadImageBox>
 ));
 
-// SortableList for wrapping the images
-const SortableList = SortableContainer(({ files, handleFileDelete }) => {
+// SortableList component for the sortable image list
+const SortableList = SortableContainer(({ files, selectedImage, handleClick, handleFileDelete }) => {
   return (
-    <FlexBox flexDirection="row" mt={2} flexWrap="wrap" gap={1}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2, flexWrap: 'wrap', gap: 1 }}>
       {files.map((file, index) => (
-        <SortableItem key={`item-${index}`} index={index} file={file} handleFileDelete={handleFileDelete} />
+        <SortableItem 
+          key={`item-${index}`} 
+          index={index} 
+          file={file} 
+          selected={selectedImage === index} 
+          handleClick={handleClick}
+          handleFileDelete={handleFileDelete} 
+        />
       ))}
-    </FlexBox>
+    </Box>
   );
 });
 
@@ -37,26 +70,45 @@ const VALIDATION_SCHEMA = yup.object().shape({
 
 const ProductForm2 = props => {
   const { initialValues, handleFormSubmit } = props;
-  const [files, setFiles] = useState([]); // HANDLE UPDATE NEW IMAGE VIA DROP ZONE
-  const handleChangeDropZone = files => {
-    files.forEach(file => Object.assign(file, {
-      preview: URL.createObjectURL(file)
-    }));
-    setFiles(files);
-  }; // HANDLE DELETE UPLOAD IMAGE
+  const [productImages, setProductImages] = useState([]);
+  const [modelFiles, setModelFiles] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null); // To store the clicked image index
 
 
-  const handleFileDelete = file => () => {
-    setFiles(files => files.filter(item => item.name !== file.name));
-  };
-
-  // Function to handle reordering of images
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    setFiles((prevFiles) => arrayMove(prevFiles, oldIndex, newIndex));
+  // Append new files instead of overwriting
+  const handleImageDrop = (acceptedFiles) => {
+    const newFiles = acceptedFiles.map(file =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file)
+      })
+    );
+    setProductImages(prevImages => [...prevImages, ...newFiles]);
   };
   
 
+  const handleModelDrop = (acceptedFiles) => {
+    const newFiles = acceptedFiles.map(file =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file)
+      })
+    );
+    setModelFiles(prevModels => [...prevModels, ...newFiles]);
+  };
 
+  // Handle file deletion
+  const handleFileDelete = (file, setFiles) => () => {
+    setFiles(files => files.filter(item => item.name !== file.name));
+  };
+
+  // Reorder files when sorting
+  const onSortEnd = (setFiles) => ({ oldIndex, newIndex }) => {
+    setFiles((prevFiles) => arrayMove(prevFiles, oldIndex, newIndex));
+  };
+
+  // Handle image click
+  const handleClick = (index) => {
+    setSelectedImage(index);
+  };
 
   return (
     <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={VALIDATION_SCHEMA}>
@@ -90,20 +142,6 @@ const ProductForm2 = props => {
                     />
                   </Grid>
 
-                  {/* Bullet Points 2 */}
-                  <Grid item sm={12} xs={12}>
-                    <SymTextField
-                      label="Bullet Points"
-                      name="bulletPoints"
-                      placeholder="Describe washing instructions for product"
-                      value={values.bulletPoints}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.bulletPoints && !!errors.bulletPoints}
-                      helperText={touched.bulletPoints && errors.bulletPoints}
-                    />
-                  </Grid>
-
                   {/* Composition */}
                   <Grid item sm={12} xs={12}>
                     <SymTextField
@@ -118,40 +156,63 @@ const ProductForm2 = props => {
                     />
                   </Grid>
 
-                  {/* IMAGE */}
+                  {/* IMAGES */}
                   <Grid item xs={12}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
-                          Product Images
-                        </Typography>
-                        <Tooltip title="Choose a category for the product">
-                          <IconButton>
-                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    <DropZone onChange={files => handleChangeDropZone(files)} />
-                    <SortableList files={files} handleFileDelete={handleFileDelete} onSortEnd={onSortEnd} axis="xy" />
-
-
-                    {/* <FlexBox flexDirection="row" mt={2} flexWrap="wrap" gap={1}>
-                      {files.map((file, index) => {
-                        return (
-                          <UploadImageBox key={index}>
-                            <Box component="img" src={file.preview} width="100%" />
-                            <StyledClear onClick={handleFileDelete(file)} />
-                          </UploadImageBox>);
-                      })}
-                    </FlexBox> */}
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                        Product Images
+                      </Typography>
+                      <Tooltip title="Choose a category for the product">
+                        <IconButton>
+                          <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <DropZone
+                      onChange={handleImageDrop}
+                      title="Drag & drop product images here"
+                      imageSize="Upload 280*280 images"
+                      acceptFormats={{ "image/*": [".png", ".jpeg", ".jpg", ".gif"] }}  // Only accept images
+                      multiple={true} // Enable multiple image uploads
+                    />
+                    <SortableList 
+                      files={productImages} 
+                      selectedImage={selectedImage} 
+                      handleClick={handleClick} 
+                      handleFileDelete={handleFileDelete} 
+                      onSortEnd={onSortEnd} 
+                      axis="xy" 
+                    />
                   </Grid>
 
+                  {/* 3D MODELS */}
+                  <Grid item xs={12}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                        3D Models
+                      </Typography>
+                      <Tooltip title="Upload 3D model files like .glb">
+                        <IconButton>
+                          <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <DropZone3D
+                      onChange={handleModelDrop}
+                      title="Drag & drop 3D model here"
+                      imageSize="Upload .glb file only"
+                      acceptFormats={{ "model/glb": [".glb"] }}  // Only accept .glb files
+                      multiple={true}  // Enable multiple 3D model uploads
+                    />
 
+                    <SortableList files={modelFiles} handleFileDelete={handleFileDelete(modelFiles, setModelFiles)} onSortEnd={onSortEnd(setModelFiles)} axis="xy" />
+                  </Grid>
                 </Grid>
               </Card>
             </Grid>
 
             {/*RIGHT CARD START*/}
-            <Grid item sm={4} xs={12}>
+            {/* <Grid item sm={4} xs={12}>
               <Card sx={styles.rightCard}>
                 <Typography sx={styles.statusTypography}>
                   Status
@@ -185,7 +246,7 @@ const ProductForm2 = props => {
                   </Grid>
                 </Grid>
               </Card>
-            </Grid>
+            </Grid> */}
             {/*RIGHT CARD ENDS*/}
 
           </Grid>

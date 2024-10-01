@@ -9,7 +9,7 @@ import { MuiColorInput } from 'mui-color-input'
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ProductVariantsTable from './components/product-variants';
+import ProductVariantsTable from './components/product-variants-1';
 import SymTextField from './components/SymTextField';
 import SymRadioButton from './components/SymRadioButton';
 import SymRichTextInputBox from './components/SymRichTextInputBox';
@@ -31,7 +31,7 @@ const baseColors = [
 const baseSizes = [
   { name: 'S' },
   { name: 'M' },
-  { name: 'L' },,
+  { name: 'L' },
   { name: 'XL' },
   { name: 'XXL' },
 ];
@@ -53,8 +53,12 @@ const ProductForm1 = props => {
   const { initialValues, handleFormSubmit } = props;
 
   const [chipData2, setChipData2] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false); // State to handle dialog visibility
+  const [openColorDialog, setOpenColorDialog] = useState(false);
+  const [openSizeDialog, setOpenSizeDialog] = useState(false); // State to handle size dialog visibility
+
   const [newColor, setNewColor] = useState('');
+  const [newSize, setNewSize] = useState('');
+
 
   const [color, setColor] = useState('#fff');
   const [selectedColors, setSelectedColors] = useState([]);
@@ -62,8 +66,15 @@ const ProductForm1 = props => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  //COLOR
+  const handleOpenColorDialog = () => {
+    setOpenColorDialog(true);
+  };
+
+  const handleCloseColorDialog = () => {
+    setOpenColorDialog(false);
+    setNewColor('');
+    setColor('#ffffff');
   };
   
   const handleAddCustomColor = () => {
@@ -78,20 +89,29 @@ const ProductForm1 = props => {
         ...prevSelected,
         customColor
       ]);
-      handleDialogClose();
+      handleCloseColorDialog();
     }
-  };
-
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    setNewColor('');
-    setColor('#ffffff');
   };
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
   };
-  
+
+  //SIZE
+  const handleOpenSizeDialog = () => {
+    setOpenSizeDialog(true);
+  };
+  const handleCloseSizeDialog = () => {
+    setOpenSizeDialog(false);
+    setNewSize('');
+  };
+  const handleAddCustomSize = () => {
+    if (newSize) {
+      const customSize = { name: newSize };
+      setSelectedSizes((prevSelected) => [...prevSelected, customSize]);
+      handleCloseSizeDialog();
+    }
+  };
   const handleBaseColorChange = (event) => {
     const selectedColor = baseColors.find(color => color.name === event.target.value);
     if (selectedColor) {
@@ -331,7 +351,7 @@ const ProductForm1 = props => {
                           )}
                         />
                         <Button
-                          onClick={handleOpenDialog}
+                          onClick={handleOpenColorDialog}
                           sx={{
                             color: '#fff',
                             fontFamily: 'Elemental End',
@@ -340,7 +360,8 @@ const ProductForm1 = props => {
                             background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)',
                             boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)',
                             backdropFilter: 'blur(50px)',
-                            borderRadius: '12px'
+                            borderRadius: '12px',
+                            width: '210px',
                           }}
                         >
                           Custom Color
@@ -361,7 +382,7 @@ const ProductForm1 = props => {
                           onChange={(event, newValue) => {
                             const updatedSizes = newValue.map((name) => {
                               const sizeObj = baseSizes.find((size) => size.name === name) ||
-                                              chipData2.find((size) => size.name === name); // Handle custom sizes
+                                              chipData2.find((size) => size.name === name);
                               return sizeObj || { name }; // Handle custom (freeSolo) entries
                             });
                             setSelectedSizes(updatedSizes); // Update the full size objects
@@ -406,6 +427,7 @@ const ProductForm1 = props => {
                           )}
                         />
                         <Button
+                          onClick={handleOpenSizeDialog}
                           sx={{
                             color: '#fff',
                             fontFamily: 'Elemental End',
@@ -414,7 +436,8 @@ const ProductForm1 = props => {
                             background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)',
                             boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)',
                             backdropFilter: 'blur(50px)',
-                            borderRadius: '12px'
+                            borderRadius: '12px',
+                            width: '210px',
                           }}
                         >
                           Custom Size
@@ -495,8 +518,8 @@ const ProductForm1 = props => {
 
             {/*RIGHT CARD ENDS*/}
 
-            {/* Dialog for adding new color */}
-            <Dialog open={openDialog} onClose={handleDialogClose} PaperProps={{ sx: { background: "rgba(255, 255, 255, 0.4)", boxShadow: "inset 0px 3.00856px 6.01712px rgba(255, 255, 255, 0.4), inset 0px -3.00856px 9.02569px rgba(255, 255, 255, 0.5), inset 0px -1.50428px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 20.0571px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 1.00285px 20.5585px rgba(255, 255, 255, 0.8)", backdropFilter: "blur(10.0285px)", borderRadius: "80px",  width: "1039px", }, }}>
+            {/* Custom Color Dialog */}
+            <Dialog open={openColorDialog} onClose={handleCloseColorDialog} PaperProps={{ sx: { background: "rgba(255, 255, 255, 0.4)", boxShadow: "inset 0px 3.00856px 6.01712px rgba(255, 255, 255, 0.4), inset 0px -3.00856px 9.02569px rgba(255, 255, 255, 0.5), inset 0px -1.50428px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 20.0571px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 1.00285px 20.5585px rgba(255, 255, 255, 0.8)", backdropFilter: "blur(10.0285px)", borderRadius: "80px",  width: "1039px", }, }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', p: "20px 46px", gap: "5px", background: "rgba(188, 188, 188, 0.1)", boxShadow: "0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)", backdropFilter: "blur(50px)" }}>
                 <DialogTitle sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>Color selection</DialogTitle>
                 <DialogContent sx={{ width:'100%', px:0 }}>
@@ -574,8 +597,93 @@ const ProductForm1 = props => {
 
                 </DialogContent>
                 <DialogActions sx={{ width:'100%'}}>
-                  <Button onClick={handleDialogClose}>Cancel</Button>
+                  <Button onClick={handleCloseColorDialog}>Cancel</Button>
                   <Button onClick={handleAddCustomColor} variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
+                    Add
+                  </Button>
+                </DialogActions>
+              </Box>
+            </Dialog>
+
+            {/* Custom Size Dialog */}
+            <Dialog open={openSizeDialog} onClose={handleCloseSizeDialog} PaperProps={{ sx: { background: "rgba(255, 255, 255, 0.4)", boxShadow: "inset 0px 3.00856px 6.01712px rgba(255, 255, 255, 0.4), inset 0px -3.00856px 9.02569px rgba(255, 255, 255, 0.5), inset 0px -1.50428px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 20.0571px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 1.00285px 20.5585px rgba(255, 255, 255, 0.8)", backdropFilter: "blur(10.0285px)", borderRadius: "80px",  width: "1039px", }, }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', p: "20px 46px", gap: "5px", background: "rgba(188, 188, 188, 0.1)", boxShadow: "0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)", backdropFilter: "blur(50px)" }}>
+                <DialogTitle sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>Size selection</DialogTitle>
+                <DialogContent sx={{ width:'100%', px:0 }}>
+                  
+                  {/*Size name*/}
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
+                        Size name
+                      </Typography>
+                      <Tooltip title="Enter the product's name">
+                        <IconButton>
+                          <InfoOutlined sx={{ color: '#000', fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                  </Box>
+                  <TextField fullWidth label="" value={newSize} onChange={(e) => setNewSize(e.target.value)} h="Enter a color" InputProps={{ style: { backgroundColor: 'white', color: '#000', borderRadius: '2px', },}} />
+
+                  {/*Size*/}
+                  {/* <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
+                      Color
+                    </Typography>
+                    <Tooltip title="Enter the product's name">
+                      <IconButton>
+                        <InfoOutlined sx={{ color: '#000', fontSize: 16 }} />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <MuiColorInput
+                    fullWidth
+                    format="hex"
+                    value={color}
+                    onChange={handleColorChange}
+                    InputProps={{
+                      style: {
+                        backgroundColor: 'white',
+                        color: '#000',
+                        borderRadius: '2px',
+                      },
+                    }}
+                  /> */}
+
+                  {/*Base size*/}
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
+                      Base size
+                    </Typography>
+                    <Tooltip title="Select a base color">
+                      <IconButton>
+                        <InfoOutlined sx={{ color: '#000', fontSize: 16 }} />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <TextField
+                    select
+                    fullWidth
+                    size="medium"
+                    onChange={handleBaseColorChange} // Update color when a base color is selected
+                    InputProps={{
+                      style: {
+                        backgroundColor: 'white',
+                        color: '#000',
+                        boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)',
+                        borderRadius: '8px',
+                      },
+                    }}
+                  >
+                    {baseSizes.map((baseSize) => (
+                      <MenuItem key={baseSize.name} value={baseSize.name}>
+                        {baseSize.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </DialogContent>
+                <DialogActions sx={{ width:'100%'}}>
+                  <Button onClick={handleCloseSizeDialog}>Cancel</Button>
+                  <Button onClick={handleAddCustomSize} variant="contained" color="info" type="submit" sx={{ fontFamily:'Elemental End', textTransform:'lowercase', padding: '5px 46px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(3, 102, 254, 0.1) 100%)', boxShadow: '0px 8px 6px rgba(0, 0, 0, 0.05), inset 2px 3px 3px -3px rgba(255, 255, 255, 0.6), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(50px)', borderRadius: '12px' }}>
                     Add
                   </Button>
                 </DialogActions>

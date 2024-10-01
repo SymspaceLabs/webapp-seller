@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   Table,
@@ -52,17 +52,17 @@ function generateVariants(colors, sizes) {
 
   if (sizes.length === 0) {
     colors.forEach((color) => {
-      variants.push(createData(color, 0, 0, 0, 0, 0)); 
+      variants.push(createData(color, null, null, 0, null, null)); 
     });
   } else if (colors.length === 0) {
     sizes.forEach((size) => {
-      variants.push(createData(size, 0, 0, 0, 0, 0));
+      variants.push(createData(size, null, null, 0, null, null));
     });
   } else {
     colors.forEach((color) => {
       sizes.forEach((size) => {
         const variant = `${color} - ${size}`;
-        variants.push(createData(variant, 0, 0, 0, 0, 0));
+        variants.push(createData(variant, null, null, 0, null, null));
       });
     });
   }
@@ -71,19 +71,19 @@ function generateVariants(colors, sizes) {
 }
 
 function ProductVariantsTable({ colors, sizes }) {
-  const [rows, setRows] = React.useState([]);
-  const [price, setPrice] = React.useState(0.00);
-  const [salePrice, setSalePrice] = React.useState(0.00);
-  const [supply, setSupply] = React.useState(0);
-  const [cost, setCost] = React.useState(0.00);
+  const [rows, setRows] = useState([]);
+  const [price, setPrice] = useState(null);
+  const [salePrice, setSalePrice] = useState(null);
+  const [supply, setSupply] = useState(0);
+  const [cost, setCost] = useState(null);
 
 
-  React.useEffect(() => {
+  useEffect(() => {
     const newRows = generateVariants(colors, sizes);
     setRows(newRows);
   }, [colors, sizes]);
 
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = useState([]);
 
   const handleSelectRow = (variant) => {
     const selectedIndex = selected.indexOf(variant);
@@ -212,6 +212,7 @@ function ProductVariantsTable({ colors, sizes }) {
             <StyledTableCell align="right">
               <SymMoneyTextField
                 value={price}
+                placeholder="0.00"
                 onChange={(e) => {
                   setPrice(e.target.value);
                   handleMasterInputChange({ ...e, target: { ...e.target, price } }, 'price');

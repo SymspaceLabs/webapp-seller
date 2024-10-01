@@ -1,52 +1,60 @@
 import duotone from "../../../icons/duotone";
-export const navigation = [{
-  type: "label",
-  label: ""
-}, {
-  name: "Dashboard",
-  icon: duotone.Dashboard,
-  path: "/"
-},
+export const navigation = [
+
+  {
+    type: "label",
+    label: ""
+  },
+
+  //DASHBOARD
+  {
+    name: "Dashboard",
+    icon: duotone.Dashboard,
+    path: "/"
+  },
+
   //SIMULATION
   {
     name: "Simulation",
     icon: duotone.Products,
     children: [{
       name: "Playground",
-      path: "/vendor/simulation"
+      path: "/vendor/simulation/playground"
     }, {
       name: "3D Product Viewer",
-      path: "/vendor/simulation/create"
+      path: "/vendor/simulation/3d-product-viewer"
+    }]
+  },
+
+  //3D PRODUCTS
+  {
+    name: "3D PRODUCTS",
+    icon: duotone.Products,
+    children: [{
+      name: "Generate 3D Model",
+      path: "/vendor/3d-products"
     }, {
-      name: "3D Products",
-      path: "/vendor/simulation/reviews",
-      children: [
-        {
-          name: "3D Repository",
-          path: "/vendor/products/create/basic-info"
-        },
-        {
-          name: "Generate 3D Model",
-          path: "/vendor/products/create/pricing"
-        },
-        {
-          name: "Request History",
-          path: "/vendor/products/create/inventory"
-        }
-      ]
+      name: "3D Repository",
+      path: "/vendor/3d-products/create"
     }, {
-      name: "AR Visual",
-      path: "/vendor/simulation/3d-model",
-      children: [
-        {
-          name: "Create AR Visual",
-          path: "/vendor/products/create/basic-info"
-        },
-        {
-          name: "Request History",
-          path: "/vendor/products/create/pricing"
-        },
-      ]
+      name: "3D Product Video",
+      path: "/vendor/3d-products/create"
+    }, {
+      name: "Request History",
+      path: "/vendor/3d-products/create"
+    } ]
+  },
+
+  //AR Visual
+  {
+    name: "AR Visual",
+    icon: duotone.Products,
+    children: [{
+      name: "Create AR Visual",
+      path: "/vendor/ar-visual"
+    }, {
+      name: "Request History",
+      path: "/vendor/ar-visual/create"
     }]
   },
 

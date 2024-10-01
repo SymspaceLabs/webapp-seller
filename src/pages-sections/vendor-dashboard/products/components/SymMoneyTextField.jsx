@@ -2,12 +2,13 @@ import React, { forwardRef } from 'react'
 import { TextField, InputAdornment } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 
-function SymMoneyTextField({ value, onChange }) {
+function SymMoneyTextField({ value, onChange, placeholder="0.00" }) {
     return (
       <TextField
         label=""
         value={value}
         onChange={onChange}
+        placeholder={placeholder}
         name="money"
         InputProps={{
           inputComponent: MoneyInput,
