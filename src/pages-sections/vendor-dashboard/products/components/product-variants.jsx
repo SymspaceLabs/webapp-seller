@@ -111,8 +111,7 @@ function ProductVariantsTable({ colors, sizes }) {
     updatedRows[index][field] = numericValue;
     setRows(updatedRows);
   };
-    
-
+  
   const handleMasterInputChange = (e, field) => {
     const value = e.target.value;
     const updatedRows = rows.map((row) => ({
