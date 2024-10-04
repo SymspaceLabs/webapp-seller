@@ -12,7 +12,7 @@ import { SortableContainer, SortableElement, arrayMove } from "react-sortable-ho
 import DropZone3D from './components/DropZone3D';
 
 // SortableItem component to render each image with label and highlight effect
-const SortableItem = SortableElement(({ file, index, isDragging, selected, handleClick, handleFileDelete }) => (
+const SortableItem = SortableElement(({ file, index, fileIndex, isDragging, selected, handleClick, handleFileDelete }) => (
   <UploadImageBox 
     key={index} 
     onClick={() => handleClick(index)} 
@@ -37,7 +37,7 @@ const SortableItem = SortableElement(({ file, index, isDragging, selected, handl
         borderRadius: '4px',
       }}
     >
-      {index + 1} {/* Label with the index number */}
+      {fileIndex + 1} {/* Label with the index number */}
     </Typography>
     <StyledClear onClick={() => handleFileDelete(file)} />
   </UploadImageBox>
@@ -51,7 +51,8 @@ const SortableList = SortableContainer(({ files, selectedImage, handleClick, han
         <SortableItem 
           key={`item-${index}`} 
           index={index} 
-          file={file} 
+          file={file}
+          fileIndex={index}
           selected={selectedImage === index} 
           handleClick={handleClick}
           handleFileDelete={handleFileDelete} 
@@ -104,6 +105,7 @@ const ProductForm2 = props => {
   const onSortEnd = (setFiles) => ({ oldIndex, newIndex }) => {
     setFiles((prevFiles) => arrayMove(prevFiles, oldIndex, newIndex));
   };
+
 
   // Handle image click
   const handleClick = (index) => {
@@ -179,10 +181,11 @@ const ProductForm2 = props => {
                       files={productImages} 
                       selectedImage={selectedImage} 
                       handleClick={handleClick} 
-                      handleFileDelete={handleFileDelete} 
-                      onSortEnd={onSortEnd} 
+                      handleFileDelete={handleFileDelete(productImages, setProductImages)} 
+                      onSortEnd={onSortEnd(setProductImages)} // This was missing the function connection
                       axis="xy" 
                     />
+
                   </Grid>
 
                   {/* 3D MODELS */}

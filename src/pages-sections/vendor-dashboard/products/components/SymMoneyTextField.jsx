@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import { TextField, InputAdornment } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 
-function SymMoneyTextField({ value, onChange, placeholder="0.00" }) {
+function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false, allowNegative=false }) {
     return (
       <TextField
         label=""
@@ -11,8 +11,12 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00" }) {
         placeholder={placeholder}
         name="money"
         InputProps={{
+          readOnly: readOnly,
           inputComponent: MoneyInput,
           style: { paddingLeft: '8px' },
+          inputProps: {
+            allowNegative: allowNegative,
+          },
           startAdornment: (
             <InputAdornment position="start">
               $
@@ -26,7 +30,7 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00" }) {
 }
 
 const MoneyInput = forwardRef(function MoneyInput(props, ref) {
-    const { onChange, ...other } = props;
+    const { onChange, allowNegative, ...other } = props;
   
     return (
       <NumericFormat
@@ -43,7 +47,7 @@ const MoneyInput = forwardRef(function MoneyInput(props, ref) {
         thousandSeparator
         decimalScale={2}      // Restrict to 2 decimal places
         fixedDecimalScale     // Always show 2 decimal places
-        allowNegative={false} // Disallow negative values
+        allowNegative={allowNegative} // Disallow negative values
         // prefix="$"            
         isNumericString       // Ensure input is treated as numeric string
       />

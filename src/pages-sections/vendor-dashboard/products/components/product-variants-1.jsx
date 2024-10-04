@@ -117,36 +117,44 @@ function ProductVariantsTable({ colors, sizes }) {
   };
 
   const handleMasterChange = (field, value) => {
-    setMasterValues((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    const updatedMasterValues = { ...masterValues, [field]: value };
+  
+    // Recalculate profit when any of salePrice, cost, or supply changes
+    if (['salePrice', 'price', 'cost', 'supply'].includes(field)) {
+      const salePrice = parseFloat(updatedMasterValues.salePrice || updatedMasterValues.price || 0);
+      const cost = parseFloat(updatedMasterValues.cost || 0);
+      const supply = parseFloat(updatedMasterValues.supply || 0);
+      updatedMasterValues.profit = (salePrice - cost) * supply;
+    }
+  
+    setMasterValues(updatedMasterValues);
   
     // Update the parent (first child in each color group)
     setRows((prevRows) =>
       prevRows.map((row) => {
-        // Update all parent rows with the new master values
-        const newRow = { ...row };
-        newRow[field] = value;
-        if (field === 'salePrice' || field === 'cost') {
-          newRow.profit = parseFloat(newRow.salePrice || 0) - parseFloat(newRow.cost || 0);
+        const newRow = { ...row, [field]: value };
+        const salePrice = parseFloat(newRow.salePrice || newRow.price || 0);
+        if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
+          newRow.profit = (salePrice - parseFloat(newRow.cost || 0)) * parseFloat(newRow.supply || 0);
         }
         return newRow;
       })
     );
   
-    // Update the variant values for all rows
+    // Update all variants with the new master values
     setVariantValues((prevVariantValues) => {
       const updatedValues = { ...prevVariantValues };
       Object.keys(updatedValues).forEach((key) => {
         updatedValues[key] = { ...updatedValues[key], [field]: value };
-        if (field === 'salePrice' || field === 'cost') {
-          updatedValues[key].profit = parseFloat(updatedValues[key].salePrice || 0) - parseFloat(updatedValues[key].cost || 0);
+        const salePrice = parseFloat(updatedValues[key].salePrice || updatedValues[key].price || 0);
+        if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
+          updatedValues[key].profit = (salePrice - parseFloat(updatedValues[key].cost || 0)) * parseFloat(updatedValues[key].supply || 0);
         }
       });
       return updatedValues;
     });
   };
+  
   
 
   const handleParentChange = (color, field, value) => {
@@ -154,9 +162,10 @@ function ProductVariantsTable({ colors, sizes }) {
       prevRows.map((row) => {
         if (row.color === color) {
           const newRow = { ...row, [field]: value };
-          if (field === 'salePrice' || field === 'cost') {
-            newRow.profit = parseFloat(newRow.salePrice || 0) - parseFloat(newRow.cost || 0);
-          }
+          const salePrice = parseFloat(newRow.salePrice || newRow.price || 0);
+          if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
+            newRow.profit = (salePrice - parseFloat(newRow.cost || 0)) * parseFloat(newRow.supply || 0);
+          }        
           return newRow;
         }
         return row;
@@ -168,8 +177,9 @@ function ProductVariantsTable({ colors, sizes }) {
       Object.keys(updatedValues).forEach((key) => {
         if (key.startsWith(`${color}-`)) {
           updatedValues[key] = { ...updatedValues[key], [field]: value };
-          if (field === 'salePrice' || field === 'cost') {
-            updatedValues[key].profit = parseFloat(updatedValues[key].salePrice || 0) - parseFloat(updatedValues[key].cost || 0);
+          const salePrice = parseFloat(updatedValues[key].salePrice || updatedValues[key].price || 0);
+          if (field === 'salePrice' || field === 'price' || field === 'cost') {
+            updatedValues[key].profit = (salePrice - parseFloat(updatedValues[key].cost || 0));
           }
         }
       });
@@ -181,9 +191,12 @@ function ProductVariantsTable({ colors, sizes }) {
   const handleVariantChange = (key, field, value) => {
     setVariantValues((prev) => {
       const updatedVariant = { ...prev[key], [field]: value };
-      if (field === 'salePrice' || field === 'cost') {
-        updatedVariant.profit = parseFloat(updatedVariant.salePrice || 0) - parseFloat(updatedVariant.cost || 0);
+      const salePrice = parseFloat(updatedVariant.salePrice || updatedVariant.price || 0);
+
+      if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
+        updatedVariant.profit = (salePrice - parseFloat(updatedVariant.cost || 0)) * parseFloat(updatedVariant.supply || 0);
       }
+      
       return {
         ...prev,
         [key]: updatedVariant,
@@ -300,6 +313,8 @@ function ProductVariantsTable({ colors, sizes }) {
               <SymMoneyTextField
                 value={masterValues.profit}
                 onChange={(e) => handleMasterChange('profit', e.target.value)}
+                readOnly={true}
+                allowNegative={true}
               />
             </StyledTableCell>
           </StyledTableRow>
@@ -348,6 +363,8 @@ function ProductVariantsTable({ colors, sizes }) {
                   <SymMoneyTextField
                     value={groupedVariants[color][0].profit}
                     onChange={(e) => handleParentChange(color, 'profit', e.target.value)}
+                    readOnly={true}
+                    allowNegative={true}
                   />
                 </StyledTableCell>
               </StyledTableRow>
@@ -407,6 +424,8 @@ function ProductVariantsTable({ colors, sizes }) {
                                   <SymMoneyTextField
                                     value={variantValues[key]?.profit || ''}
                                     onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
+                                    readOnly={true}
+                                    allowNegative={true}
                                   />
                                 </StyledTableCell>
                               </StyledTableRow>
