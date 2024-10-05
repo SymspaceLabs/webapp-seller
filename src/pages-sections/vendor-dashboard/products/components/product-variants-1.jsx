@@ -97,20 +97,35 @@ function ProductVariantsTable({ colors, sizes }) {
   });
 
   useEffect(() => {
-    const newRows = generateVariants(colors, sizes);
-    setRows(newRows);
+    if (colors.length === 0 && sizes.length === 0) {
+      // Reset master values when no colors and sizes are selected
+      setMasterValues({
+        price: '',
+        salePrice: '',
+        supply: 0,
+        cost: '',
+        profit: '',
+      });
+  
+      // Clear variant values
+      setVariantValues({});
+    } else {
+      const newRows = generateVariants(colors, sizes);
+      setRows(newRows);
 
-    const initialExpandedState = colors.reduce((acc, color) => {
-      acc[color] = false;
-      return acc;
-    }, {});
-    setExpanded(initialExpandedState);
+      const initialExpandedState = colors.reduce((acc, color) => {
+        acc[color] = false;
+        return acc;
+      }, {});
+      setExpanded(initialExpandedState);
 
-    const initialVariantValues = newRows.reduce((acc, row) => {
-      acc[`${row.color}-${row.size}`] = { ...row };
-      return acc;
-    }, {});
-    setVariantValues(initialVariantValues);
+      const initialVariantValues = newRows.reduce((acc, row) => {
+        acc[`${row.color}-${row.size}`] = { ...row };
+        return acc;
+      }, {});
+      setVariantValues(initialVariantValues);
+    }
+
   }, [colors, sizes]);
 
   const handleExpandClick = (color) => {

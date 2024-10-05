@@ -56,6 +56,7 @@ const ProductForm1 = props => {
   const [openColorDialog, setOpenColorDialog] = useState(false);
   const [openSizeDialog, setOpenSizeDialog] = useState(false); // State to handle size dialog visibility
 
+  const [selectedCategory, setSelectedCategory] = useState(''); // Track selected category
   const [newColor, setNewColor] = useState('');
   const [newSize, setNewSize] = useState('');
 
@@ -166,7 +167,7 @@ const ProductForm1 = props => {
                         </Tooltip>
                       </Box>
 
-                      <MultiLevelAutocomplete />
+                      <MultiLevelAutocomplete onCategorySelect={setSelectedCategory} />
                     </Box>
                   </Grid>
 
@@ -218,10 +219,42 @@ const ProductForm1 = props => {
                     </Grid>
                   )}
 
-                  
-
                   {/* Category Tags */}
-                  <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
+                  {selectedCategory  && (
+                    <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
+                      <FlexBox gap={1} flexDirection="column">
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                            Category Tags
+                          </Typography>
+                          <Tooltip title="Choose a category for the product">
+                            <IconButton>
+                              <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      
+                        {/* Age group */}
+                        <SymMultiSelectChip
+                          options={ageGroups}
+                          selectedItems={selectedAgeGroup}
+                          setSelectedItems={setSelectedAgeGroup}
+                          label="Age group"
+                          allLabel="All ages"
+                        />
+                        
+                        {/* Gender */}
+                        <SymMultiSelectChip
+                          options={genders}
+                          selectedItems={selectedGender}
+                          setSelectedItems={setSelectedGender}
+                          label="Gender"
+                          allLabel="Unisex"
+                        />
+                      </FlexBox>
+                    </Grid>
+                  )}
+                  {/* <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
                     <FlexBox gap={1} flexDirection="column">
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
@@ -234,7 +267,6 @@ const ProductForm1 = props => {
                         </Tooltip>
                       </Box>
                     
-                      {/* Age group */}
                       <SymMultiSelectChip
                         options={ageGroups}
                         selectedItems={selectedAgeGroup}
@@ -243,7 +275,6 @@ const ProductForm1 = props => {
                         allLabel="All ages"
                       />
                       
-                      {/* Gender */}
                       <SymMultiSelectChip
                         options={genders}
                         selectedItems={selectedGender}
@@ -253,7 +284,8 @@ const ProductForm1 = props => {
                       />
 
                     </FlexBox>
-                  </Grid>
+                  </Grid> */}
+
 
                   {/* Description */}
                   <Grid item xs={12} sx={{ mt: 2.5 }}>
@@ -723,7 +755,7 @@ const categories = [
   },
 ];
 
-const MultiLevelAutocomplete = () => {
+const MultiLevelAutocomplete = ({ onCategorySelect }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [subAnchorEl, setSubAnchorEl] = useState(null);
   const [subSubAnchorEl, setSubSubAnchorEl] = useState(null);
@@ -756,13 +788,24 @@ const MultiLevelAutocomplete = () => {
 
   const handleSelect = (item) => {
     setInputValue(item);
+    onCategorySelect(item); // Pass selected category to parent component
     handleClose();
   };
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TextField InputProps={{ style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px', }, }} label="" placeholder="Select a category" value={inputValue} onClick={handleInputClick} fullWidth readOnly />
-      
+      <TextField 
+        InputProps={{ 
+          style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' }, 
+        }} 
+        label="" 
+        placeholder="Select a category" 
+        value={inputValue} 
+        onClick={handleInputClick} 
+        fullWidth 
+        readOnly 
+      />
+
       {/* First Level */}
       <Menu
         anchorEl={anchorEl}
@@ -811,8 +854,8 @@ const MultiLevelAutocomplete = () => {
         PaperProps={{ style: { width: '300px' } }}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        getContentAnchorEl={null} // Ensures the third level appears next to the second level
-        style={{ marginLeft: '20px' }} // Ensure margin to the right
+        getContentAnchorEl={null}
+        style={{ marginLeft: '20px' }}
       >
         {activeItems.map((item, index) => (
           <MenuItem key={index} onClick={() => handleSelect(item.name)}>
@@ -823,6 +866,7 @@ const MultiLevelAutocomplete = () => {
     </Box>
   );
 };
+
 
 
 export default ProductForm1;
