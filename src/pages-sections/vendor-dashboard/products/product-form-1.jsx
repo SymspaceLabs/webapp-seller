@@ -152,6 +152,24 @@ const ProductForm1 = props => {
                     />
                   </Grid>
 
+                  {/* Category */}
+                  <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap:2  }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', minWidth:'250px' }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                          Product Category
+                        </Typography>
+                        <Tooltip title="Choose a category for the product">
+                          <IconButton>
+                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+
+                      <MultiLevelAutocomplete />
+                    </Box>
+                  </Grid>
+
                   {/* Product Type */}
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
                     <SymRadioButton
@@ -200,23 +218,7 @@ const ProductForm1 = props => {
                     </Grid>
                   )}
 
-                  {/* Category */}
-                  <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap:2  }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', minWidth:'250px' }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
-                          Product Category
-                        </Typography>
-                        <Tooltip title="Choose a category for the product">
-                          <IconButton>
-                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-
-                      <MultiLevelAutocomplete />
-                    </Box>
-                  </Grid>
+                  
 
                   {/* Category Tags */}
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
@@ -253,18 +255,17 @@ const ProductForm1 = props => {
                     </FlexBox>
                   </Grid>
 
-
                   {/* Description */}
-                    <Grid item xs={12} sx={{ mt: 2.5 }}>
-                      <SymRichTextInputBox
-                        label="Dimensions"
-                        id='rich-editor'
-                        placeholder="Write your description here..." 
-                        value={values.description}
-                        onChange={handleChange}
-                        simple={false}
-                      />
-                    </Grid>
+                  <Grid item xs={12} sx={{ mt: 2.5 }}>
+                    <SymRichTextInputBox
+                      label="Dimensions"
+                      id='rich-editor'
+                      placeholder="Write your description here..." 
+                      value={values.description}
+                      onChange={handleChange}
+                      simple={false}
+                    />
+                  </Grid>
 
                   {/* Product Variant */}
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
@@ -448,12 +449,16 @@ const ProductForm1 = props => {
                     </FlexBox>
                   </Grid>
                  
-                 {/* Product Variant Table*/}
+                  {/* Product Variant Table*/}
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
-                    <ProductVariantsTable
-                      colors={selectedColors.map((color) => color.name)}
-                      sizes={selectedSizes.map((size) => size.name)}
-                    />
+                    {!(selectedColors.length==0 && selectedSizes.length==0) ?(
+                      <ProductVariantsTable
+                        colors={selectedColors.map((color) => color.name)}
+                        sizes={selectedSizes.map((size) => size.name)}
+                      />
+                      ) : null
+                    }
+                    
                   </Grid>
 
                 </Grid>
