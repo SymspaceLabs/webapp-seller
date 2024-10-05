@@ -16,10 +16,14 @@ export default function VendorDashboardLayout({
   return (
     <LayoutProvider>
       <Box>
+      <style>
+          {`.css-28k8rt, .css-1fbkvt5  { background: transparent; margin-left:0; }`}
+      </style>
       <BlobBox sx={{ top: '40rem', right: '30rem', backgroundColor: '#0366FE', }} />
       <BlobBox sx={{ top: '40rem', right: '40rem', backgroundColor: '#0366FE', animationDelay: '2s', }} />
       <BlobBox sx={{ top: '50rem', right: '35rem', backgroundColor: '#0366FE', animationDelay: '4s', }} />
         <DashboardSidebar />
+        
         <BodyWrapper>
           <DashboardNavbar />
           {children}

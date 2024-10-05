@@ -1,3 +1,5 @@
+/// THIS IS THE SIDEBAR COMPONENT
+
 import MenuItem from "@mui/material/MenuItem"; // MUI ICON COMPONENTS
 
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown"; // GLOBAL CUSTOM COMPONENTS
