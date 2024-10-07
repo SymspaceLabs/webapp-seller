@@ -65,23 +65,42 @@ function groupVariantsByColor(variants) {
   return grouped;
 }
 
-function generateVariants(colors, sizes) {
+function generateVariants(colors, sizes, masterValues) {
   const variants = [];
 
   if (sizes.length === 0) {
     colors.forEach((color) => {
-      variants.push(createData(color, null, '', '', 0, '', ''));
+      variants.push(createData(color, null, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, masterValues.profit));
     });
   } else {
     colors.forEach((color) => {
       sizes.forEach((size) => {
-        variants.push(createData(color, size, '', '', 0, '', ''));
+        variants.push(createData(color, size, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, masterValues.profit));
       });
     });
   }
 
   return variants;
 }
+
+
+// function generateVariants(colors, sizes) {
+//   const variants = [];
+
+//   if (sizes.length === 0) {
+//     colors.forEach((color) => {
+//       variants.push(createData(color, null, '', '', 0, '', ''));
+//     });
+//   } else {
+//     colors.forEach((color) => {
+//       sizes.forEach((size) => {
+//         variants.push(createData(color, size, '', '', 0, '', ''));
+//       });
+//     });
+//   }
+
+//   return variants;
+// }
 
 function ProductVariantsTable({ colors, sizes }) {
   const [rows, setRows] = useState([]);
@@ -95,6 +114,38 @@ function ProductVariantsTable({ colors, sizes }) {
     cost: '',
     profit: '',
   });
+
+  // useEffect(() => {
+  //   if (colors.length === 0 && sizes.length === 0) {
+  //     // Reset master values when no colors and sizes are selected
+  //     setMasterValues({
+  //       price: '',
+  //       salePrice: '',
+  //       supply: 0,
+  //       cost: '',
+  //       profit: '',
+  //     });
+  
+  //     // Clear variant values
+  //     setVariantValues({});
+  //   } else {
+  //     const newRows = generateVariants(colors, sizes);
+  //     setRows(newRows);
+
+  //     const initialExpandedState = colors.reduce((acc, color) => {
+  //       acc[color] = false;
+  //       return acc;
+  //     }, {});
+  //     setExpanded(initialExpandedState);
+
+  //     const initialVariantValues = newRows.reduce((acc, row) => {
+  //       acc[`${row.color}-${row.size}`] = { ...row };
+  //       return acc;
+  //     }, {});
+  //     setVariantValues(initialVariantValues);
+  //   }
+
+  // }, [colors, sizes]);
 
   useEffect(() => {
     if (colors.length === 0 && sizes.length === 0) {
@@ -110,24 +161,23 @@ function ProductVariantsTable({ colors, sizes }) {
       // Clear variant values
       setVariantValues({});
     } else {
-      const newRows = generateVariants(colors, sizes);
+      const newRows = generateVariants(colors, sizes, masterValues); // Pass masterValues here
       setRows(newRows);
-
+  
       const initialExpandedState = colors.reduce((acc, color) => {
         acc[color] = false;
         return acc;
       }, {});
       setExpanded(initialExpandedState);
-
+  
       const initialVariantValues = newRows.reduce((acc, row) => {
         acc[`${row.color}-${row.size}`] = { ...row };
         return acc;
       }, {});
       setVariantValues(initialVariantValues);
     }
-
-  }, [colors, sizes]);
-
+  }, [colors, sizes, masterValues]);
+  
   const handleExpandClick = (color) => {
     setExpanded((prev) => ({
       ...prev,

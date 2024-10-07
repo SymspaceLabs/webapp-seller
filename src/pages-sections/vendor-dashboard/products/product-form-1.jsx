@@ -254,38 +254,6 @@ const ProductForm1 = props => {
                       </FlexBox>
                     </Grid>
                   )}
-                  {/* <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
-                    <FlexBox gap={1} flexDirection="column">
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
-                          Category Tags
-                        </Typography>
-                        <Tooltip title="Choose a category for the product">
-                          <IconButton>
-                            <InfoOutlined sx={{ color: '#fff', fontSize: 16 }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    
-                      <SymMultiSelectChip
-                        options={ageGroups}
-                        selectedItems={selectedAgeGroup}
-                        setSelectedItems={setSelectedAgeGroup}
-                        label="Age group"
-                        allLabel="All ages"
-                      />
-                      
-                      <SymMultiSelectChip
-                        options={genders}
-                        selectedItems={selectedGender}
-                        setSelectedItems={setSelectedGender}
-                        label="Gender"
-                        allLabel="Unisex"
-                      />
-
-                    </FlexBox>
-                  </Grid> */}
-
 
                   {/* Description */}
                   <Grid item xs={12} sx={{ mt: 2.5 }}>
