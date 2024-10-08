@@ -1,8 +1,15 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef } from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 
-function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false, allowNegative=false }) {
+function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false, allowNegative=false, isProfit=false }) {
+    const handleFocus = (event) => {
+        event.target.select(); // Select all text on focus
+    };
+
+    // Determine the color for profit fields: green for positive, red for negative, white otherwise
+    const textColor = isProfit ? (value < 0 ? 'red' : value > 0 ? 'green' : 'white') : 'white';
+
     return (
       <TextField
         label=""
@@ -10,6 +17,26 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false
         onChange={onChange}
         placeholder={placeholder}
         name="money"
+        onFocus={handleFocus}  // Select all text on focus
+        sx={{
+          '& .MuiInputBase-input': {
+            color: textColor, // Set the input text color dynamically only for profit fields
+          },
+          '& .MuiInputLabel-root': {
+            color: 'white', // Set the label color to white
+          },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'white', // Set the border color to white
+            },
+            '&:hover fieldset': {
+              borderColor: 'white', // Border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'white', // Border color when focused
+            },
+          },
+        }}
         InputProps={{
           readOnly: readOnly,
           inputComponent: MoneyInput,
@@ -31,7 +58,7 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false
 
 const MoneyInput = forwardRef(function MoneyInput(props, ref) {
     const { onChange, allowNegative, ...other } = props;
-  
+
     return (
       <NumericFormat
         {...other}
@@ -47,11 +74,10 @@ const MoneyInput = forwardRef(function MoneyInput(props, ref) {
         thousandSeparator
         decimalScale={2}      // Restrict to 2 decimal places
         fixedDecimalScale     // Always show 2 decimal places
-        allowNegative={allowNegative} // Disallow negative values
-        // prefix="$"            
+        allowNegative={allowNegative} // Allow or disallow negative values based on props
         isNumericString       // Ensure input is treated as numeric string
       />
     );
-  });
+});
 
-export default SymMoneyTextField
+export default SymMoneyTextField;

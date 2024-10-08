@@ -8,12 +8,12 @@ import { MuiColorInput } from 'mui-color-input'
 
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ProductVariantsTable from './components/product-variants-1';
 import SymTextField from './components/SymTextField';
 import SymRadioButton from './components/SymRadioButton';
 import SymRichTextInputBox from './components/SymRichTextInputBox';
 import SymMultiSelectChip from './components/SymMultiSelectChip';
+import SymMultiLevelSelect from './components/SymMultiLevelSelect';
 
 const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -167,7 +167,7 @@ const ProductForm1 = props => {
                         </Tooltip>
                       </Box>
 
-                      <MultiLevelAutocomplete onCategorySelect={setSelectedCategory} />
+                      <SymMultiLevelSelect onCategorySelect={setSelectedCategory} />
                     </Box>
                   </Grid>
 
@@ -701,140 +701,6 @@ const ProductForm1 = props => {
     </Formik>
   );
 };
-
-
-const categories = [
-  {
-    name: 'Clothing, Shoes & Accessories',
-    subcategories: [
-      { name: 'Dresses', subcategoryItems: [{ name: 'Casual Dresses' }, { name: 'Formal Dresses' }, { name: 'Tank tops' }, { name: 'Summer Dresses' }] },
-      { name: 'Tops', subcategoryItems: [{ name: 'Blouses' }, { name: 'T-Shirts' }, { name: 'Tank tops' }, { name: 'Sweaters' }, { name: 'Cardigans' }] },
-      { name: 'Shirts', subcategoryItems: [{ name: 'Casual Shirts' }, { name: 'Dress Shirts' }, { name: 'T-Shirts' }, { name: 'Polo Shirts' }] },
-      // More subcategories here...
-    ],
-  },
-  {
-    name: 'Electronics',
-    subcategories: [
-      { name: 'Mobile Phones & Accessories', subcategoryItems: [{ name: 'Smartphones' }, { name: 'Cases & Covers' }, { name: 'Screen Protectors' }] },
-      { name: 'Computers & Accessories', subcategoryItems: [{ name: 'Laptops' }, { name: 'Desktops' }, { name: 'Monitors' }] },
-      // More subcategories here...
-    ],
-  },
-];
-
-const MultiLevelAutocomplete = ({ onCategorySelect }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [subAnchorEl, setSubAnchorEl] = useState(null);
-  const [subSubAnchorEl, setSubSubAnchorEl] = useState(null);
-  const [activeSubcategories, setActiveSubcategories] = useState([]);
-  const [activeItems, setActiveItems] = useState([]);
-  const [inputValue, setInputValue] = useState('');
-
-  const handleInputClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setSubAnchorEl(null);
-    setSubSubAnchorEl(null);
-    setActiveSubcategories([]);
-    setActiveItems([]);
-  };
-
-  const handleCategoryClick = (event, subcategories) => {
-    setSubAnchorEl(event.currentTarget);
-    setActiveSubcategories(subcategories);
-    setSubSubAnchorEl(null);
-  };
-
-  const handleSubcategoryClick = (event, subcategoryItems) => {
-    setSubSubAnchorEl(event.currentTarget);
-    setActiveItems(subcategoryItems);
-  };
-
-  const handleSelect = (item) => {
-    setInputValue(item);
-    onCategorySelect(item); // Pass selected category to parent component
-    handleClose();
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <TextField 
-        InputProps={{ 
-          style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' }, 
-        }} 
-        label="" 
-        placeholder="Select a category" 
-        value={inputValue} 
-        onClick={handleInputClick} 
-        fullWidth 
-        readOnly 
-      />
-
-      {/* First Level */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        PaperProps={{ style: { width: '300px' } }}
-      >
-        {categories.map((category, index) => (
-          <MenuItem
-            key={index}
-            onClick={(event) => handleCategoryClick(event, category.subcategories)}
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
-          >
-            {category.name}
-            {category.subcategories.length > 0 && <ChevronRightIcon />}
-          </MenuItem>
-        ))}
-      </Menu>
-
-      {/* Second Level */}
-      <Menu
-        anchorEl={subAnchorEl}
-        open={Boolean(subAnchorEl)}
-        onClose={handleClose}
-        PaperProps={{ style: { width: '300px' } }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        {activeSubcategories.map((subcategory, index) => (
-          <MenuItem
-            key={index}
-            onClick={(event) => handleSubcategoryClick(event, subcategory.subcategoryItems)}
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
-          >
-            {subcategory.name}
-            {subcategory.subcategoryItems.length > 0 && <ChevronRightIcon />}
-          </MenuItem>
-        ))}
-      </Menu>
-
-      {/* Third Level */}
-      <Menu
-        anchorEl={subSubAnchorEl}
-        open={Boolean(subSubAnchorEl)}
-        onClose={handleClose}
-        PaperProps={{ style: { width: '300px' } }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        getContentAnchorEl={null}
-        style={{ marginLeft: '20px' }}
-      >
-        {activeItems.map((item, index) => (
-          <MenuItem key={index} onClick={() => handleSelect(item.name)}>
-            {item.name}
-          </MenuItem>
-        ))}
-      </Menu>
-    </Box>
-  );
-};
-
 
 
 export default ProductForm1;

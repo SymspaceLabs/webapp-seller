@@ -34,6 +34,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: 2,
+    color: 'white',
   },
 }));
 
@@ -83,25 +84,6 @@ function generateVariants(colors, sizes, masterValues) {
   return variants;
 }
 
-
-// function generateVariants(colors, sizes) {
-//   const variants = [];
-
-//   if (sizes.length === 0) {
-//     colors.forEach((color) => {
-//       variants.push(createData(color, null, '', '', 0, '', ''));
-//     });
-//   } else {
-//     colors.forEach((color) => {
-//       sizes.forEach((size) => {
-//         variants.push(createData(color, size, '', '', 0, '', ''));
-//       });
-//     });
-//   }
-
-//   return variants;
-// }
-
 function ProductVariantsTable({ colors, sizes }) {
   const [rows, setRows] = useState([]);
   const [variantValues, setVariantValues] = useState({});
@@ -115,37 +97,6 @@ function ProductVariantsTable({ colors, sizes }) {
     profit: '',
   });
 
-  // useEffect(() => {
-  //   if (colors.length === 0 && sizes.length === 0) {
-  //     // Reset master values when no colors and sizes are selected
-  //     setMasterValues({
-  //       price: '',
-  //       salePrice: '',
-  //       supply: 0,
-  //       cost: '',
-  //       profit: '',
-  //     });
-  
-  //     // Clear variant values
-  //     setVariantValues({});
-  //   } else {
-  //     const newRows = generateVariants(colors, sizes);
-  //     setRows(newRows);
-
-  //     const initialExpandedState = colors.reduce((acc, color) => {
-  //       acc[color] = false;
-  //       return acc;
-  //     }, {});
-  //     setExpanded(initialExpandedState);
-
-  //     const initialVariantValues = newRows.reduce((acc, row) => {
-  //       acc[`${row.color}-${row.size}`] = { ...row };
-  //       return acc;
-  //     }, {});
-  //     setVariantValues(initialVariantValues);
-  //   }
-
-  // }, [colors, sizes]);
 
   useEffect(() => {
     if (colors.length === 0 && sizes.length === 0) {
@@ -223,7 +174,6 @@ function ProductVariantsTable({ colors, sizes }) {
       return updatedValues;
     });
   };
-  
   
 
   const handleParentChange = (color, field, value) => {
@@ -372,8 +322,31 @@ function ProductVariantsTable({ colors, sizes }) {
                 size="small"
                 value={masterValues.supply}
                 type="number"
-                onChange={(e) => handleMasterChange('supply', e.target.value)}
+                onChange={(e) => {
+                  const value = Math.max(0, Number(e.target.value)); // Ensure value is not negative
+                  handleMasterChange('supply', value);
+                }}
+                onFocus={(event) => event.target.select() }
                 fullWidth
+                sx={{
+                  '& .MuiInputBase-input': {
+                    color: 'white', // Set the input text color to white
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'white', // Set the label color to white
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'white', // Set the border color to white
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'white', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'white', // Border color when focused
+                    },
+                  },
+                }}
                 InputProps={{ style: { padding: 0 } }}
               />
             </StyledTableCell>
@@ -389,6 +362,7 @@ function ProductVariantsTable({ colors, sizes }) {
                 onChange={(e) => handleMasterChange('profit', e.target.value)}
                 readOnly={true}
                 allowNegative={true}
+                isProfit={true}
               />
             </StyledTableCell>
           </StyledTableRow>
@@ -422,8 +396,31 @@ function ProductVariantsTable({ colors, sizes }) {
                     size="small"
                     value={groupedVariants[color][0].supply}
                     type="number"
-                    onChange={(e) => handleParentChange(color, 'supply', e.target.value)}
+                    onChange={(e) => {
+                      const value = Math.max(0, Number(e.target.value)); 
+                      handleParentChange(color, 'supply', value)
+                    }}
+                    onFocus={(event) => event.target.select() }
                     fullWidth
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        color: 'white', // Set the input text color to white
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'white', // Set the label color to white
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'white', // Set the border color to white
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'white', // Border color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'white', // Border color when focused
+                        },
+                      },
+                    }}
                     InputProps={{ style: { padding: 0 } }}
                   />
                 </StyledTableCell>
@@ -439,6 +436,7 @@ function ProductVariantsTable({ colors, sizes }) {
                     onChange={(e) => handleParentChange(color, 'profit', e.target.value)}
                     readOnly={true}
                     allowNegative={true}
+                    isProfit={true}
                   />
                 </StyledTableCell>
               </StyledTableRow>
@@ -478,7 +476,27 @@ function ProductVariantsTable({ colors, sizes }) {
                                     value={variantValues[key]?.supply || 0}
                                     type="number"
                                     onChange={(e) => handleVariantChange(key, 'supply', e.target.value)}
+                                    onFocus={(event) => event.target.select() }
                                     fullWidth
+                                    sx={{
+                                      '& .MuiInputBase-input': {
+                                        color: 'white', // Set the input text color to white
+                                      },
+                                      '& .MuiInputLabel-root': {
+                                        color: 'white', // Set the label color to white
+                                      },
+                                      '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                          borderColor: 'white', // Set the border color to white
+                                        },
+                                        '&:hover fieldset': {
+                                          borderColor: 'white', // Border color on hover
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                          borderColor: 'white', // Border color when focused
+                                        },
+                                      },
+                                    }}
                                     InputProps={{ style: { padding: 0 } }}
                                   />
                                 </StyledTableCell>
@@ -494,6 +512,7 @@ function ProductVariantsTable({ colors, sizes }) {
                                     onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
                                     readOnly={true}
                                     allowNegative={true}
+                                    isProfit={true}
                                   />
                                 </StyledTableCell>
                               </StyledTableRow>
@@ -508,24 +527,24 @@ function ProductVariantsTable({ colors, sizes }) {
             </React.Fragment>
           ))}
         </TableBody>
-         {/* Add the totals row */}
-         <StyledTableRow>
-            <StyledTableCell colSpan={2} sx={{ textAlign: 'left' }}>
+          {/* Add the totals row */}
+          <StyledTableRow>
+            <StyledTableCell colSpan={2} sx={{ textAlign: 'left', color: 'white' }}>
               <strong>Total</strong>
             </StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="right" sx={{ color: 'white' }}>
               {totalValues.price.toFixed(2)}
             </StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="right" sx={{ color: 'white' }}>
               {totalValues.salePrice.toFixed(2)}
             </StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="right" sx={{ color: 'white' }}>
               {totalValues.supply}
             </StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="right" sx={{ color: 'white' }}>
               {totalValues.cost.toFixed(2)}
             </StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="right" sx={{ color: 'white' }}>
               {totalValues.profit.toFixed(2)}
             </StyledTableCell>
           </StyledTableRow>
