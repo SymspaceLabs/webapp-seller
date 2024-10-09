@@ -6,7 +6,7 @@ const SymRadioButton = ({ label, name, id, value, options, onChange }) => {
     return (
         <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: 5 }} >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                     {label}
                 </Typography>
                 <Tooltip title="Enter the product's name">

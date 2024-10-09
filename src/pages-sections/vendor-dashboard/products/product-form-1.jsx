@@ -135,7 +135,7 @@ const ProductForm1 = props => {
           <Grid container spacing={3} sx={{pr: 4}}>
             
             {/*Left Card STARTS*/}
-            <Grid item sm={8} xs={12}>
+            <Grid item lg={9} md={12}>
               <Card sx={{ p: 6, background: 'transparent' }}>
                 <Grid container spacing={3}>
 
@@ -157,7 +157,7 @@ const ProductForm1 = props => {
                   <Grid item sm={12} xs={12} sx={{ mt: 2.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap:2  }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', minWidth:'250px' }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                           Product Category
                         </Typography>
                         <Tooltip title="Choose a category for the product">
@@ -271,7 +271,7 @@ const ProductForm1 = props => {
                   <Grid item sm={12} xs={12} sx={{ mt: 5 }}>
                     <FlexBox gap={1} flexDirection="column">
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+                        <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                           Product Variant
                         </Typography>
                         <Tooltip title="Choose a category for the product">
@@ -466,10 +466,10 @@ const ProductForm1 = props => {
             </Grid>
 
             {/*RIGHT CARD START*/}
-            <Grid item sm={4} xs={12}>
+            <Grid item lg={3} md={12}>
               <Card
                 sx={{
-                  mt: 2,
+                  mt: 10,
                   p: 4,
                   background:
                     'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
@@ -519,9 +519,9 @@ const ProductForm1 = props => {
                 </Grid>
               </Card>
             </Grid>
-
-
             {/*RIGHT CARD ENDS*/}
+
+          </Grid>
 
             {/* Custom Color Dialog */}
             <Dialog open={openColorDialog} onClose={handleCloseColorDialog} PaperProps={{ sx: { background: "rgba(255, 255, 255, 0.4)", boxShadow: "inset 0px 3.00856px 6.01712px rgba(255, 255, 255, 0.4), inset 0px -3.00856px 9.02569px rgba(255, 255, 255, 0.5), inset 0px -1.50428px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 20.0571px 20.0571px rgba(255, 255, 255, 0.24), inset 0px 1.00285px 20.5585px rgba(255, 255, 255, 0.8)", backdropFilter: "blur(10.0285px)", borderRadius: "80px",  width: "1039px", }, }}>
@@ -629,31 +629,6 @@ const ProductForm1 = props => {
                   </Box>
                   <TextField fullWidth label="" value={newSize} onChange={(e) => setNewSize(e.target.value)} h="Enter a color" InputProps={{ style: { backgroundColor: 'white', color: '#000', borderRadius: '2px', },}} />
 
-                  {/*Size*/}
-                  {/* <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
-                      Color
-                    </Typography>
-                    <Tooltip title="Enter the product's name">
-                      <IconButton>
-                        <InfoOutlined sx={{ color: '#000', fontSize: 16 }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                  <MuiColorInput
-                    fullWidth
-                    format="hex"
-                    value={color}
-                    onChange={handleColorChange}
-                    InputProps={{
-                      style: {
-                        backgroundColor: 'white',
-                        color: '#000',
-                        borderRadius: '2px',
-                      },
-                    }}
-                  /> */}
-
                   {/*Base size*/}
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#000' }}>
@@ -694,8 +669,6 @@ const ProductForm1 = props => {
                 </DialogActions>
               </Box>
             </Dialog>
-
-          </Grid>
         </form>
       )}
     </Formik>

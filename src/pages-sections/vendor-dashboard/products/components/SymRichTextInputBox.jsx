@@ -36,7 +36,7 @@ const SymRichTextInputBox = ({ id, placeholder, value, onChange, simple }) => {
   return (
     <div>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <FormLabel sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1, }}>
+            <FormLabel sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                 Description
             </FormLabel>
             <Tooltip title="Provide a detailed description of the product">

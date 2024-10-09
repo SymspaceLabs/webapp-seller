@@ -7,8 +7,8 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false
         event.target.select(); // Select all text on focus
     };
 
-    // Determine the color for profit fields: green for positive, red for negative, white otherwise
-    const textColor = isProfit ? (value < 0 ? 'red' : value > 0 ? 'green' : 'white') : 'white';
+    // Determine the color for profit fields: green for positive, red for negative, black otherwise
+    const textColor = isProfit ? (value < 0 ? 'red' : value > 0 ? 'green' : 'black') : 'black';
 
     return (
       <TextField
@@ -20,20 +20,25 @@ function SymMoneyTextField({ value, onChange, placeholder="0.00", readOnly=false
         onFocus={handleFocus}  // Select all text on focus
         sx={{
           '& .MuiInputBase-input': {
-            color: textColor, // Set the input text color dynamically only for profit fields
+            color: textColor, // Set the input text color dynamically
+            backgroundColor: 'white', // Set background color to white
+            '&::placeholder': {
+              color: 'gray', // Set the placeholder text color to gray or another visible color
+            },
           },
           '& .MuiInputLabel-root': {
-            color: 'white', // Set the label color to white
+            color: 'black', // Set the label color to black if used
           },
           '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: 'white', // Set the border color to white
-            },
-            '&:hover fieldset': {
-              borderColor: 'white', // Border color on hover
-            },
+            backgroundColor: 'white', // Background color for the input
+            // '& fieldset': {
+            //   borderColor: 'black', // Set the border color to black
+            // },
+            // '&:hover fieldset': {
+            //   borderColor: 'black', // Border color on hover
+            // },
             '&.Mui-focused fieldset': {
-              borderColor: 'white', // Border color when focused
+              borderColor: 'black', // Border color when focused
             },
           },
         }}

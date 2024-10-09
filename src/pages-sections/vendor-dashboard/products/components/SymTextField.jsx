@@ -7,7 +7,7 @@ const SymTextField = ({ label, name, placeholder, value, onBlur, onChange, error
   return (
     <div>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff', mr: 1 }}>
+            <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
                 {label}
             </Typography>
             <Tooltip title="Enter the product's name">

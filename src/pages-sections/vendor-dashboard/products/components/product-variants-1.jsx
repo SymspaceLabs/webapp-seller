@@ -19,7 +19,10 @@ import {
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SymMoneyTextField from './SymMoneyTextField'; // Import your custom component
+import SymNumberTextField from './SymNumberTextField'; // Import your custom component
+
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Import Info icon
+import { fontSize } from '../../../../theme/typography';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,6 +40,20 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: 'white',
   },
 }));
+
+const tableContainerStyles = {
+  mt: 2,
+  background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
+  boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)',
+  backdropFilter: 'blur(12px)',
+  borderRadius: '15px',
+};
+
+const tableFooterTextStyles = {
+  color: 'white',
+  fontSize:'16px'
+};
+
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -100,7 +117,6 @@ function ProductVariantsTable({ colors, sizes }) {
 
   useEffect(() => {
     if (colors.length === 0 && sizes.length === 0) {
-      // Reset master values when no colors and sizes are selected
       setMasterValues({
         price: '',
         salePrice: '',
@@ -109,11 +125,19 @@ function ProductVariantsTable({ colors, sizes }) {
         profit: '',
       });
   
-      // Clear variant values
       setVariantValues({});
     } else {
-      const newRows = generateVariants(colors, sizes, masterValues); // Pass masterValues here
-      setRows(newRows);
+      const newRows = generateVariants(colors, sizes, masterValues);
+  
+      // Avoid resetting rows on color deletion, retain previous row values where possible
+      setRows((prevRows) => {
+        return newRows.map((newRow) => {
+          const existingRow = prevRows.find(
+            (prevRow) => prevRow.color === newRow.color && prevRow.size === newRow.size
+          );
+          return existingRow ? { ...existingRow } : newRow;
+        });
+      });
   
       const initialExpandedState = colors.reduce((acc, color) => {
         acc[color] = false;
@@ -121,13 +145,30 @@ function ProductVariantsTable({ colors, sizes }) {
       }, {});
       setExpanded(initialExpandedState);
   
-      const initialVariantValues = newRows.reduce((acc, row) => {
-        acc[`${row.color}-${row.size}`] = { ...row };
-        return acc;
-      }, {});
-      setVariantValues(initialVariantValues);
+      setVariantValues((prevVariantValues) => {
+        const updatedValues = { ...prevVariantValues };
+  
+        newRows.forEach((row) => {
+          const key = `${row.color}-${row.size}`;
+          if (!updatedValues[key]) {
+            updatedValues[key] = { ...row };
+          }
+        });
+  
+        // Remove variant values only for the deleted rows, not resetting all
+        Object.keys(updatedValues).forEach((key) => {
+          const [color] = key.split('-');
+          if (!colors.includes(color)) {
+            delete updatedValues[key];
+          }
+        });
+  
+        return updatedValues;
+      });
     }
   }, [colors, sizes, masterValues]);
+  
+  
   
   const handleExpandClick = (color) => {
     setExpanded((prev) => ({
@@ -138,18 +179,16 @@ function ProductVariantsTable({ colors, sizes }) {
 
   const handleMasterChange = (field, value) => {
     const updatedMasterValues = { ...masterValues, [field]: value };
-  
-    // Recalculate profit when any of salePrice, cost, or supply changes
+
     if (['salePrice', 'price', 'cost', 'supply'].includes(field)) {
       const salePrice = parseFloat(updatedMasterValues.salePrice || updatedMasterValues.price || 0);
       const cost = parseFloat(updatedMasterValues.cost || 0);
       const supply = parseFloat(updatedMasterValues.supply || 0);
       updatedMasterValues.profit = (salePrice - cost) * supply;
     }
-  
+
     setMasterValues(updatedMasterValues);
-  
-    // Update the parent (first child in each color group)
+
     setRows((prevRows) =>
       prevRows.map((row) => {
         const newRow = { ...row, [field]: value };
@@ -160,8 +199,7 @@ function ProductVariantsTable({ colors, sizes }) {
         return newRow;
       })
     );
-  
-    // Update all variants with the new master values
+
     setVariantValues((prevVariantValues) => {
       const updatedValues = { ...prevVariantValues };
       Object.keys(updatedValues).forEach((key) => {
@@ -237,15 +275,10 @@ function ProductVariantsTable({ colors, sizes }) {
   };
 
   return (
-    <TableContainer component={Paper}   sx={{
-      mt: 2,
-      background:
-        'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
-      boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '15px',
-    }}>
+    <TableContainer component={Paper} sx={tableContainerStyles}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
+
+        {/* TABLE HEAD */}
         <TableHead>
           <TableRow>
             <StyledTableCell padding="checkbox" />
@@ -299,11 +332,12 @@ function ProductVariantsTable({ colors, sizes }) {
             </StyledTableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {/* Master Row */}
           <StyledTableRow>
             <StyledTableCell />
-            <StyledTableCell>All Variants</StyledTableCell>
+            <StyledTableCell>Update All Variants</StyledTableCell>
             <StyledTableCell align="right">
               <SymMoneyTextField
                 value={masterValues.price}
@@ -317,37 +351,12 @@ function ProductVariantsTable({ colors, sizes }) {
               />
             </StyledTableCell>
             <StyledTableCell align="right">
-              <TextField
-                variant="outlined"
-                size="small"
+              <SymNumberTextField
                 value={masterValues.supply}
-                type="number"
                 onChange={(e) => {
                   const value = Math.max(0, Number(e.target.value)); // Ensure value is not negative
                   handleMasterChange('supply', value);
                 }}
-                onFocus={(event) => event.target.select() }
-                fullWidth
-                sx={{
-                  '& .MuiInputBase-input': {
-                    color: 'white', // Set the input text color to white
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: 'white', // Set the label color to white
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white', // Set the border color to white
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white', // Border color when focused
-                    },
-                  },
-                }}
-                InputProps={{ style: { padding: 0 } }}
               />
             </StyledTableCell>
             <StyledTableCell align="right">
@@ -391,37 +400,12 @@ function ProductVariantsTable({ colors, sizes }) {
                   />
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <TextField
-                    variant="outlined"
-                    size="small"
+                  <SymNumberTextField
                     value={groupedVariants[color][0].supply}
-                    type="number"
                     onChange={(e) => {
                       const value = Math.max(0, Number(e.target.value)); 
                       handleParentChange(color, 'supply', value)
                     }}
-                    onFocus={(event) => event.target.select() }
-                    fullWidth
-                    sx={{
-                      '& .MuiInputBase-input': {
-                        color: 'white', // Set the input text color to white
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: 'white', // Set the label color to white
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: 'white', // Set the border color to white
-                        },
-                        '&:hover fieldset': {
-                          borderColor: 'white', // Border color on hover
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: 'white', // Border color when focused
-                        },
-                      },
-                    }}
-                    InputProps={{ style: { padding: 0 } }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="right">
@@ -445,109 +429,90 @@ function ProductVariantsTable({ colors, sizes }) {
               <StyledTableRow>
                 <StyledTableCell colSpan={7}>
                   <Collapse in={expanded[color]} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: 1 }}>
-                      <Table size="small" aria-label="variants">
-                        <TableBody>
-                          {groupedVariants[color].map((row, index) => {
-                            const key = `${row.color}-${row.size}`;
-                            const isItemSelected = isSelected(row.size);
-                            return (
-                              <StyledTableRow key={row.size} hover selected={isItemSelected}>
-                                <StyledTableCell padding="checkbox" />
-                                <StyledTableCell component="th" scope="row" sx={{ textAlign: 'left', width: 200 }}>
-                                  {row.size || color}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                  <SymMoneyTextField
-                                    value={variantValues[key]?.price || ''}
-                                    onChange={(e) => handleVariantChange(key, 'price', e.target.value)}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                  <SymMoneyTextField
-                                    value={variantValues[key]?.salePrice || ''}
-                                    onChange={(e) => handleVariantChange(key, 'salePrice', e.target.value)}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                  <TextField
-                                    variant="outlined"
-                                    size="small"
-                                    value={variantValues[key]?.supply || 0}
-                                    type="number"
-                                    onChange={(e) => handleVariantChange(key, 'supply', e.target.value)}
-                                    onFocus={(event) => event.target.select() }
-                                    fullWidth
-                                    sx={{
-                                      '& .MuiInputBase-input': {
-                                        color: 'white', // Set the input text color to white
-                                      },
-                                      '& .MuiInputLabel-root': {
-                                        color: 'white', // Set the label color to white
-                                      },
-                                      '& .MuiOutlinedInput-root': {
-                                        '& fieldset': {
-                                          borderColor: 'white', // Set the border color to white
-                                        },
-                                        '&:hover fieldset': {
-                                          borderColor: 'white', // Border color on hover
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                          borderColor: 'white', // Border color when focused
-                                        },
-                                      },
-                                    }}
-                                    InputProps={{ style: { padding: 0 } }}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                  <SymMoneyTextField
-                                    value={variantValues[key]?.cost || ''}
-                                    onChange={(e) => handleVariantChange(key, 'cost', e.target.value)}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                  <SymMoneyTextField
-                                    value={variantValues[key]?.profit || ''}
-                                    onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
-                                    readOnly={true}
-                                    allowNegative={true}
-                                    isProfit={true}
-                                  />
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </Box>
+                    <Table sx={{ minWidth: 700 }}  size="small" aria-label="variants" >
+                      <TableBody>
+                        {groupedVariants[color].map((row, index) => {
+                          const key = `${row.color}-${row.size}`;
+                          const isItemSelected = isSelected(row.size);
+                          return (
+                            <StyledTableRow key={row.size} hover selected={isItemSelected}>
+
+                              <StyledTableCell sx={{ minWidth: '45px' }} />
+
+                              <StyledTableCell sx={{ minWidth: '200px' }}>
+                                {row.size || color}
+                              </StyledTableCell>
+
+                              <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
+                                <SymMoneyTextField
+                                  value={variantValues[key]?.price || ''}
+                                  onChange={(e) => handleVariantChange(key, 'price', e.target.value)}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
+                                <SymMoneyTextField
+                                  value={variantValues[key]?.salePrice || ''}
+                                  onChange={(e) => handleVariantChange(key, 'salePrice', e.target.value)}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
+                                <SymNumberTextField
+                                  value={variantValues[key]?.supply || 0}
+                                  onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)); 
+                                    handleVariantChange(key, 'supply', value)
+                                  }}
+                                />
+
+                              </StyledTableCell>
+                              <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
+                                <SymMoneyTextField
+                                  value={variantValues[key]?.cost || ''}
+                                  onChange={(e) => handleVariantChange(key, 'cost', e.target.value)}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
+                                <SymMoneyTextField
+                                  value={variantValues[key]?.profit || ''}
+                                  onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
+                                  readOnly={true}
+                                  allowNegative={true}
+                                  isProfit={true}
+                                />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </Collapse>
                 </StyledTableCell>
               </StyledTableRow>
             </React.Fragment>
           ))}
         </TableBody>
-          {/* Add the totals row */}
-          <StyledTableRow>
-            <StyledTableCell colSpan={2} sx={{ textAlign: 'left', color: 'white' }}>
-              <strong>Total</strong>
-            </StyledTableCell>
-            <StyledTableCell align="right" sx={{ color: 'white' }}>
-              {totalValues.price.toFixed(2)}
-            </StyledTableCell>
-            <StyledTableCell align="right" sx={{ color: 'white' }}>
-              {totalValues.salePrice.toFixed(2)}
-            </StyledTableCell>
-            <StyledTableCell align="right" sx={{ color: 'white' }}>
-              {totalValues.supply}
-            </StyledTableCell>
-            <StyledTableCell align="right" sx={{ color: 'white' }}>
-              {totalValues.cost.toFixed(2)}
-            </StyledTableCell>
-            <StyledTableCell align="right" sx={{ color: 'white' }}>
-              {totalValues.profit.toFixed(2)}
-            </StyledTableCell>
-          </StyledTableRow>
+
+        {/* Add the totals row */}
+        <StyledTableRow>
+          <StyledTableCell colSpan={2} sx={[tableFooterTextStyles, { textAlign: 'left', fontFamily: 'Elemental End', textTransform: 'lowercase', fontSize:'14px' }]}>
+            <strong>Total</strong>
+          </StyledTableCell>
+          <StyledTableCell align="right" sx={tableFooterTextStyles}>
+            {totalValues.price.toFixed(2)}
+          </StyledTableCell>
+          <StyledTableCell align="right" sx={tableFooterTextStyles}>
+            {totalValues.salePrice.toFixed(2)}
+          </StyledTableCell>
+          <StyledTableCell align="right" sx={tableFooterTextStyles}>
+            {totalValues.supply}
+          </StyledTableCell>
+          <StyledTableCell align="right" sx={tableFooterTextStyles}>
+            {totalValues.cost.toFixed(2)}
+          </StyledTableCell>
+          <StyledTableCell align="right" sx={tableFooterTextStyles}>
+            {totalValues.profit.toFixed(2)}
+          </StyledTableCell>
+        </StyledTableRow>
       </Table>
     </TableContainer>
   );
