@@ -22,7 +22,7 @@ const getModules = (simple) => ({
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['link', 'blockquote', 'code-block'],
         [{ align: [] }],
-        [{ color: [] }, { background: [] }],
+        // [{ color: [] }, { background: [] }],
       ],
   syntax: {
     highlight: (text) => hljs.highlightAuto(text).value,

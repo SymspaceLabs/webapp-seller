@@ -287,6 +287,7 @@ const ProductForm1 = props => {
                           Color
                         </Typography>
                         <Autocomplete
+                          disableCloseOnSelect  
                           multiple
                           freeSolo
                           options={baseColors.map((option) => option.name)} // Options as array of strings
@@ -376,6 +377,7 @@ const ProductForm1 = props => {
                           Size
                         </Typography>
                         <Autocomplete
+                          disableCloseOnSelect  
                           multiple
                           freeSolo
                           options={baseSizes.map((option) => option.name)} // Options as array of strings
