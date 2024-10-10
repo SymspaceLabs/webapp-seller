@@ -20,7 +20,7 @@ const getModules = (simple) => ({
         [{ header: [1, 2, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'blockquote', 'code-block'],
+        // ['link', 'blockquote', 'code-block'],
         [{ align: [] }],
         // [{ color: [] }, { background: [] }],
       ],
