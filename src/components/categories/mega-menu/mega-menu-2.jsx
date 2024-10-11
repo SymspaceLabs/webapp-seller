@@ -11,7 +11,7 @@ export default function MegaMenu2({
 }) {
   return <StyledRoot elevation={2}>
       {data.map(item => <CategoryMenuItem href={item.href} icon={item.icon} key={item.title} title={item.title} caret={!!item.children} render={item.children?.length ? <ColumnList minWidth={550} list={item.children}>
-                <OfferBanner />
+                {/* <OfferBanner /> */}
               </ColumnList> : null} />)}
     </StyledRoot>;
 }

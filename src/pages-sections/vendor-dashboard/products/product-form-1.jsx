@@ -3,9 +3,7 @@ import { Autocomplete, TextField, Menu, MenuItem, Box, Card, Typography, Button,
 import { InfoOutlined } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as yup from "yup";
-
 import { MuiColorInput } from 'mui-color-input'
-
 import 'react-quill/dist/quill.snow.css';
 import { FlexBox } from "../../../components/flex-box";
 import ProductVariantsTable from './components/product-variants-1';
@@ -55,17 +53,19 @@ const ProductForm1 = props => {
   const [chipData2, setChipData2] = useState([]);
   const [openColorDialog, setOpenColorDialog] = useState(false);
   const [openSizeDialog, setOpenSizeDialog] = useState(false); // State to handle size dialog visibility
-
-  const [selectedCategory, setSelectedCategory] = useState(''); // Track selected category
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [newColor, setNewColor] = useState('');
   const [newSize, setNewSize] = useState('');
-
-
   const [color, setColor] = useState('#fff');
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedAgeGroup, setSelectedAgeGroup] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category); // Store the selected category in state
+    console.log("Selected category:", category); // You can log it or perform other actions
+  };
 
   //COLOR
   const handleOpenColorDialog = () => {
@@ -158,7 +158,7 @@ const ProductForm1 = props => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap:2  }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', minWidth:'250px' }}>
                         <Typography sx={{ fontFamily: 'Elemental End', textTransform: 'lowercase', color: '#fff' }}>
-                          Product Category
+                          Product Category 
                         </Typography>
                         <Tooltip title="Choose a category for the product">
                           <IconButton>
@@ -167,7 +167,10 @@ const ProductForm1 = props => {
                         </Tooltip>
                       </Box>
 
-                      <SymMultiLevelSelect onCategorySelect={setSelectedCategory} />
+                      <SymMultiLevelSelect
+                        onCategorySelect={handleCategorySelect} 
+                        selectedCategory={selectedCategory}
+                      />
                     </Box>
                   </Grid>
 

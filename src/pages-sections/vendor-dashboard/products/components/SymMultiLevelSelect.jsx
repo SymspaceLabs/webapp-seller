@@ -1,150 +1,240 @@
-import React, { useState, useMemo } from "react";
-import { TextField, Menu, MenuItem, Box } from "@mui/material";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Categories from './MultiLevelDropdown'
-const SymMultiLevelSelect = ({ onCategorySelect }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [subAnchorEl, setSubAnchorEl] = useState(null);
-  const [subSubAnchorEl, setSubSubAnchorEl] = useState(null);
-  const [activeCategoryPath, setActiveCategoryPath] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+import ChevronRight from "@mui/icons-material/ChevronRight";
+import styled from "@mui/material/styles/styled";
+import Category from "../../../../icons/Category";
+import Button from "@mui/material/Button";
+import { Typography, Box } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { categoryMenus } from "../../../../data/categoryMenus";
+import Card from "@mui/material/Card";
+import { FlexBox } from "../../../../components/flex-box";
+import Grid from "@mui/material/Grid";
 
-  // const categories = useMemo(() => [
-  //   {
-  //     name: 'Clothing, Shoes & Accessories',
-  //     subcategories: [
-  //       { name: 'Dresses', subcategoryItems: [{ name: 'Casual Dresses' }, { name: 'Formal Dresses' }, { name: 'Tank tops' }, { name: 'Summer Dresses' }] },
-  //       { name: 'Tops', subcategoryItems: [{ name: 'Blouses' }, { name: 'T-Shirts' }, { name: 'Tank tops' }, { name: 'Sweaters' }, { name: 'Cardigans' }] },
-  //       { name: 'Shirts', subcategoryItems: [{ name: 'Casual Shirts' }, { name: 'Dress Shirts' }, { name: 'T-Shirts' }, { name: 'Polo Shirts' }] },
-  //     ],
-  //   },
-  //   {
-  //     name: 'Electronics',
-  //     subcategories: [
-  //       { name: 'Mobile Phones & Accessories', subcategoryItems: [{ name: 'Smartphones' }, { name: 'Cases & Covers' }, { name: 'Screen Protectors' }] },
-  //       { name: 'Computers & Accessories', subcategoryItems: [{ name: 'Laptops' }, { name: 'Desktops' }, { name: 'Monitors' }] },
-  //     ],
-  //   },
-  // ], []);
-
-  const handleInputClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setSubAnchorEl(null);
-    setSubSubAnchorEl(null);
-    setActiveCategoryPath([]); // Reset active path when opening
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setSubAnchorEl(null);
-    setSubSubAnchorEl(null);
-    setActiveCategoryPath([]);
-  };
-
-  const handleCategoryClick = (event, category) => {
-    const newPath = [category];
-    setActiveCategoryPath(newPath);
-    setSubAnchorEl(event.currentTarget);
-    setSubSubAnchorEl(null);
-  };
-
-  const handleSubcategoryClick = (event, subcategory) => {
-    const newPath = [...activeCategoryPath, subcategory];
-    setActiveCategoryPath(newPath);
-    setSubSubAnchorEl(event.currentTarget);
-  };
-
-  const handleSelect = (item) => {
-    setInputValue(item.name);
-    onCategorySelect(item);
-    handleClose();
-  };
-
-  const getSubcategories = () => {
-    if (activeCategoryPath.length > 0) {
-      return activeCategoryPath[0].subcategories;
-    }
-    return [];
-  };
-
-  const getSubcategoryItems = () => {
-    if (activeCategoryPath.length > 1) {
-      return activeCategoryPath[1].subcategoryItems;
-    }
-    return [];
-  };
-
+const SymMultiLevelSelect = ({ onCategorySelect, selectedCategory }) => {
   return (
-    // <Box sx={{ width: '100%' }}>
-    //   <TextField
-    //     InputProps={{
-    //       style: { backgroundColor: 'white', color: '#000', boxShadow: '0px 0px 4px rgba(48, 132, 255, 0.75)', borderRadius: '8px' },
-    //     }}
-    //     placeholder="Select a category"
-    //     value={inputValue}
-    //     onClick={handleInputClick}
-    //     fullWidth
-    //     readOnly
-    //   />
-
-    //   {/* First Level Menu */}
-    //   <Menu
-    //     anchorEl={anchorEl}
-    //     open={Boolean(anchorEl)}
-    //     onClose={handleClose}
-    //     PaperProps={{ style: { width: '300px' } }}
-    //   >
-    //     {categories.map((category, index) => (
-    //       <MenuItem
-    //         key={index}
-    //         onClick={(event) => handleCategoryClick(event, category)}
-    //         sx={{ display: 'flex', justifyContent: 'space-between' }}
-    //       >
-    //         {category.name}
-    //         {category.subcategories.length > 0 && <ChevronRightIcon />}
-    //       </MenuItem>
-    //     ))}
-    //   </Menu>
-
-    //   {/* Second Level Menu */}
-    //   <Menu
-    //     anchorEl={subAnchorEl}
-    //     open={Boolean(subAnchorEl)}
-    //     onClose={handleClose}
-    //     PaperProps={{ style: { width: '300px' } }}
-    //     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    //     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-    //   >
-    //     {getSubcategories().map((subcategory, index) => (
-    //       <MenuItem
-    //         key={index}
-    //         onClick={(event) => handleSubcategoryClick(event, subcategory)}
-    //         sx={{ display: 'flex', justifyContent: 'space-between' }}
-    //       >
-    //         {subcategory.name}
-    //         {subcategory.subcategoryItems.length > 0 && <ChevronRightIcon />}
-    //       </MenuItem>
-    //     ))}
-    //   </Menu>
-
-    //   {/* Third Level Menu */}
-    //   <Menu
-    //     anchorEl={subSubAnchorEl}
-    //     open={Boolean(subSubAnchorEl)}
-    //     onClose={handleClose}
-    //     PaperProps={{ style: { width: '300px' } }}
-    //     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    //     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-    //   >
-    //     {getSubcategoryItems().map((item, index) => (
-    //       <MenuItem key={index} onClick={() => handleSelect(item)}>
-    //         {item.name}
-    //       </MenuItem>
-    //     ))}
-    //   </Menu>
-    // </Box>
-    <Categories />
+    <Box sx={{ width: "100%" }}>
+      <CategoryMenu
+        onCategorySelect={onCategorySelect}
+        render={(handler) => (
+          <CategoryMenuButton variant="text" onClick={(e) => handler(e)}>
+            <div className="prefix">
+              <Category fontSize="small" />
+              <Typography>
+                Categories {selectedCategory ? ` - ${selectedCategory}` : ""}
+              </Typography>
+            </div>
+            <ChevronRight className="dropdown-icon" fontSize="small" />
+          </CategoryMenuButton>
+        )}
+      />
+    </Box>
   );
 };
+
+function CategoryMenu({ render, onCategorySelect }) {
+  const [open, setOpen] = useState(false);
+
+  const onClick = (e) => {
+    e.stopPropagation();
+    setOpen((open) => !open);
+  };
+
+  const handleDocumentClick = useCallback(() => setOpen(false), []);
+  useEffect(() => {
+    window.addEventListener("click", handleDocumentClick);
+    return () => window.removeEventListener("click", handleDocumentClick);
+  }, [handleDocumentClick]);
+
+  return (
+    <Wrapper open={open}>
+      {render(onClick)}
+      <CategoryList open={open} onCategorySelect={onCategorySelect} />
+    </Wrapper>
+  );
+}
+
+function CategoryList({ open, onCategorySelect, position = "absolute" }) {
+  return (
+    <StyledRoot open={open} position={position}>
+      {categoryMenus.map((item) => {
+        const { title, children, component, icon, offer } = item;
+        const MegaMenu = component === MegaMenu1.name ? MegaMenu1 : MegaMenu2;
+        return (
+          <CategoryListItem
+            key={title}
+            title={title}
+            icon={icon}
+            caret={!!children}
+            onClick={() => onCategorySelect(title)}
+            render={
+              component ? (
+                <MegaMenu data={children} onCategorySelect={onCategorySelect} banner={offer} />
+              ) : null
+            }
+          />
+        );
+      })}
+    </StyledRoot>
+  );
+}
+
+
+function CategoryListItem({ title, onClick, render, caret = true, icon: Icon }) {
+  return (
+    <Wrapper1 onClick={onClick}>
+      <Box>
+        <div className="category-dropdown-link">
+          {Icon ? <Icon fontSize="small" color="inherit" /> : null}
+          <span className="title">{title}</span>
+          {caret ? <ChevronRight fontSize="small" className="caret-icon" /> : null}
+        </div>
+      </Box>
+      {render ? <div className="mega-menu">{render}</div> : null}
+    </Wrapper1>
+  );
+}
+
+function MegaMenu1({ data, onCategorySelect }) {
+  return <ColumnList list={data} onCategorySelect={onCategorySelect} />;
+}
+
+
+function ColumnList({ list, onCategorySelect, children, minWidth = 760 }) {
+  return (
+    <StyledRoot1 elevation={2} sx={{ minWidth }}>
+      <FlexBox px={2.5}>
+        <Box flex="1 1 0">
+          <Grid container spacing={4}>
+            {list.map((item, ind) => (
+              <Grid item md={3} key={ind}>
+                <div className="title-link">{item.title}</div>
+                {item.children?.map((sub, subInd) => (
+                  <Box
+                    className="child-link"
+                    key={subInd}
+                    onClick={() => onCategorySelect(sub.title)} // Select the child category
+                  >
+                    {sub.title}
+                  </Box>
+                ))}
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </FlexBox>
+      {children}
+    </StyledRoot1>
+  );
+}
+
+
+export const StyledRoot1 = styled(Card)(({ theme }) => ({
+  marginLeft: "1rem",
+  paddingBlock: "0.5rem",
+  "& .title-link, & .child-link": {
+    color: "inherit",
+    fontWeight: 600,
+    display: "block",
+    padding: "0.5rem 0px",
+  },
+  "& .child-link": {
+    fontWeight: 400,
+  },
+  "& .mega-menu-content": {
+    borderRadius: 4,
+    marginLeft: "1rem",
+    padding: "0.5rem 0px",
+    boxShadow: theme.shadows[3],
+    transition: "all 250ms ease-in-out",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+function MegaMenu2({ data, onCategorySelect }) {
+  return (
+    <StyledRoot1 elevation={2}>
+      {data.map((item) => (
+        <CategoryListItem
+          key={item.title}
+          title={item.title}
+          caret={!!item.children}
+          render={
+            item.children?.length ? (
+              <ColumnList list={item.children} onCategorySelect={onCategorySelect} />
+            ) : null
+          }
+        />
+      ))}
+    </StyledRoot1>
+  );
+}
+
+
+const StyledRoot = styled("div")(({ theme, position, open }) => ({
+  left: 0,
+  zIndex: 98,
+  right: "auto",
+  borderRadius: 4,
+  padding: "0.5rem 0px",
+  transformOrigin: "top",
+  boxShadow: theme.shadows[2],
+  position: position || "unset",
+  transition: "all 250ms ease-in-out",
+  transform: open ? "scaleY(1)" : "scaleY(0)",
+  backgroundColor: theme.palette.background.paper,
+  top: position === "absolute" ? "calc(100% + 0.7rem)" : "0.5rem",
+}));
+
+const Wrapper = styled("div")(({ open, theme: { direction } }) => ({
+  cursor: "pointer",
+  position: "relative",
+  "& .dropdown-icon": {
+    transition: "all 250ms ease-in-out",
+    transform: `rotate(${open ? (direction === "rtl" ? "-90deg" : "90deg") : "0deg"})`,
+  },
+}));
+
+const CategoryMenuButton = styled(Button)(({ theme }) => ({
+  width: "100%",
+  borderRadius: 4,
+  backgroundColor: theme.palette.grey[100],
+  ".prefix": {
+    gap: 8,
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    color: theme.palette.grey[800],
+  },
+}));
+
+const Wrapper1 = styled("div")(({ theme }) => ({
+  "& .category-dropdown-link": {
+    height: 40,
+    display: "flex",
+    minWidth: "278px",
+    cursor: "pointer",
+    whiteSpace: "pre",
+    padding: "0px 1rem",
+    alignItems: "center",
+    transition: "all 300ms ease-in-out",
+    ".title": {
+      flexGrow: 1,
+      paddingLeft: "0.75rem",
+    },
+  },
+  ":hover": {
+    color: theme.palette.primary.main,
+    background: theme.palette.action.hover,
+    "& > .mega-menu": {
+      display: "block",
+    },
+  },
+  ".mega-menu": {
+    top: 0,
+    zIndex: 99,
+    left: "100%",
+    display: "none",
+    position: "absolute",
+  },
+}));
 
 export default SymMultiLevelSelect;
