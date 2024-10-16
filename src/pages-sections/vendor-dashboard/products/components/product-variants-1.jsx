@@ -1,71 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import {
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
   Paper,
-  Checkbox,
   IconButton,
   Collapse,
-  Box,
-  TextField,
-  tableCellClasses,
   Tooltip,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SymMoneyTextField from './SymMoneyTextField'; // Import your custom component
 import SymNumberTextField from './SymNumberTextField'; // Import your custom component
-
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Import Info icon
-import { fontSize } from '../../../../theme/typography';
+import { StyledTableCell, tableContainerStyles, tableFooterTextStyles, StyledTableRow  } from './TableStyles';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
-    color: theme.palette.common.white,
-    textAlign: 'center',
-    color: 'white', // White text color for the header
-    textAlign: 'center',
-    fontFamily: 'Elemental End', // Custom font family
-    textTransform: 'lowercase', // Lowercase text
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    padding: 2,
-    color: 'white',
-  },
-}));
-
-const tableContainerStyles = {
-  mt: 2,
-  background: 'linear-gradient(117.54deg, rgba(255, 255, 255, 0.5) -19.85%, rgba(235, 235, 235, 0.367354) 4.2%, rgba(224, 224, 224, 0.287504) 13.88%, rgba(212, 212, 212, 0.21131) 27.98%, rgba(207, 207, 207, 0.175584) 37.8%, rgba(202, 202, 202, 0.143432) 44.38%, rgba(200, 200, 200, 0.126299) 50.54%, rgba(196, 196, 196, 0.1) 60.21%)',
-  boxShadow: '0px 1px 24px -1px rgba(0, 0, 0, 0.18)',
-  backdropFilter: 'blur(12px)',
-  borderRadius: '15px',
-};
-
-const tableFooterTextStyles = {
-  color: 'white',
-  fontSize:'16px'
-};
-
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '& td, & th': {
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 function createData(color, size, price, salePrice, supply, cost, profit) {
   return { color, size, price, salePrice, supply, cost, profit };
@@ -86,17 +37,20 @@ function groupVariantsByColor(variants) {
 function generateVariants(colors, sizes, masterValues) {
   const variants = [];
 
-  if (sizes.length === 0) {
-    colors.forEach((color) => {
-      variants.push(createData(color, null, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, masterValues.profit));
-    });
-  } else {
-    colors.forEach((color) => {
+  colors.forEach((color) => {
+    if (sizes.length === 0) {
+      // Create a single row for the color with no size
+      const profit = masterValues.supply > 0 ? (masterValues.salePrice - masterValues.cost) * masterValues.supply : 0;
+      variants.push(createData(color, null, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, profit));
+    } else {
+      // Create a row for each size under the color
       sizes.forEach((size) => {
-        variants.push(createData(color, size, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, masterValues.profit));
+        const profit = masterValues.supply > 0 ? (masterValues.salePrice - masterValues.cost) * masterValues.supply : 0;
+        variants.push(createData(color, size, masterValues.price, masterValues.salePrice, masterValues.supply, masterValues.cost, profit));
+
       });
-    });
-  }
+    }
+  });
 
   return variants;
 }
@@ -113,69 +67,40 @@ function ProductVariantsTable({ colors, sizes }) {
     cost: '',
     profit: '',
   });
+  const [totalProfit, setTotalProfit] = useState(0);
 
 
-  useEffect(() => {
-    if (colors.length === 0 && sizes.length === 0) {
-      setMasterValues({
-        price: '',
-        salePrice: '',
-        supply: 0,
-        cost: '',
-        profit: '',
-      });
-  
-      setVariantValues({});
-    } else {
-      const newRows = generateVariants(colors, sizes, masterValues);
-  
-      // Avoid resetting rows on color deletion, retain previous row values where possible
-      setRows((prevRows) => {
-        return newRows.map((newRow) => {
-          const existingRow = prevRows.find(
-            (prevRow) => prevRow.color === newRow.color && prevRow.size === newRow.size
-          );
-          return existingRow ? { ...existingRow } : newRow;
-        });
-      });
-  
-      const initialExpandedState = colors.reduce((acc, color) => {
-        acc[color] = false;
-        return acc;
-      }, {});
-      setExpanded(initialExpandedState);
-  
-      setVariantValues((prevVariantValues) => {
-        const updatedValues = { ...prevVariantValues };
-  
-        newRows.forEach((row) => {
-          const key = `${row.color}-${row.size}`;
-          if (!updatedValues[key]) {
-            updatedValues[key] = { ...row };
+  // Function to update color-specific rows and variantValues simultaneously
+  const updateColorRows = (color, field, value) => {
+    setRows((prevRows) =>
+      prevRows.map((row) => {
+        if (row.color === color && row.size === null) {
+          // Update the parent row (color row) directly
+          return { ...row, [field]: value };
+        }
+        return row;
+      })
+    );
+    
+    // Update color-specific variants but skip size rows
+    setVariantValues((prevVariantValues) => {
+      const updatedValues = { ...prevVariantValues };
+      Object.keys(updatedValues).forEach((key) => {
+        const [variantColor, size] = key.split('-');
+        if (variantColor === color && size === 'null') {
+          updatedValues[key] = { ...updatedValues[key], [field]: value };
+          
+          // Recalculate profit if relevant fields are updated
+          if (['salePrice', 'price', 'cost', 'supply'].includes(field)) {
+            const salePrice = parseFloat(updatedValues[key].salePrice || updatedValues[key].price || 0);
+            updatedValues[key].profit = (salePrice - parseFloat(updatedValues[key].cost || 0)) * parseFloat(updatedValues[key].supply || 0);
           }
-        });
-  
-        // Remove variant values only for the deleted rows, not resetting all
-        Object.keys(updatedValues).forEach((key) => {
-          const [color] = key.split('-');
-          if (!colors.includes(color)) {
-            delete updatedValues[key];
-          }
-        });
-  
-        return updatedValues;
+        }
       });
-    }
-  }, [colors, sizes, masterValues]);
-  
-  
-  
-  const handleExpandClick = (color) => {
-    setExpanded((prev) => ({
-      ...prev,
-      [color]: !prev[color],
-    }));
+      return updatedValues;
+    });
   };
+  
 
   const handleMasterChange = (field, value) => {
     const updatedMasterValues = { ...masterValues, [field]: value };
@@ -184,51 +109,120 @@ function ProductVariantsTable({ colors, sizes }) {
       const salePrice = parseFloat(updatedMasterValues.salePrice || updatedMasterValues.price || 0);
       const cost = parseFloat(updatedMasterValues.cost || 0);
       const supply = parseFloat(updatedMasterValues.supply || 0);
-      updatedMasterValues.profit = (salePrice - cost) * supply;
+      
+      // Check if supply is 0 before calculating profit
+      if (supply === 0) {
+        updatedMasterValues.profit = 0;
+      } else {
+        updatedMasterValues.profit = (salePrice - cost) * supply;
+      }
     }
 
     setMasterValues(updatedMasterValues);
 
+    // Update each row with the new master value
     setRows((prevRows) =>
       prevRows.map((row) => {
-        const newRow = { ...row, [field]: value };
-        const salePrice = parseFloat(newRow.salePrice || newRow.price || 0);
-        if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
-          newRow.profit = (salePrice - parseFloat(newRow.cost || 0)) * parseFloat(newRow.supply || 0);
+        const updatedRow = { ...row, [field]: value };
+        const salePrice = parseFloat(updatedRow.salePrice || updatedRow.price || 0);
+        const cost = parseFloat(updatedRow.cost || 0);
+        const supply = parseFloat(updatedRow.supply || 0);
+        
+        // Check if supply is 0 before calculating profit for each row
+        if (supply === 0) {
+          updatedRow.profit = 0;
+        } else {
+          updatedRow.profit = (salePrice - cost) * supply;
         }
-        return newRow;
+        
+        return updatedRow;
       })
     );
 
+    // Update variantValues as well
     setVariantValues((prevVariantValues) => {
       const updatedValues = { ...prevVariantValues };
       Object.keys(updatedValues).forEach((key) => {
         updatedValues[key] = { ...updatedValues[key], [field]: value };
         const salePrice = parseFloat(updatedValues[key].salePrice || updatedValues[key].price || 0);
-        if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
-          updatedValues[key].profit = (salePrice - parseFloat(updatedValues[key].cost || 0)) * parseFloat(updatedValues[key].supply || 0);
+        const cost = parseFloat(updatedValues[key].cost || 0);
+        const supply = parseFloat(updatedValues[key].supply || 0);
+        
+        // Check if supply is 0 before calculating profit for variant values
+        if (supply === 0) {
+          updatedValues[key].profit = 0;
+        } else {
+          updatedValues[key].profit = (salePrice - cost) * supply;
         }
       });
       return updatedValues;
     });
   };
+
+  useEffect(() => {
+    const newRows = generateVariants(colors, sizes, masterValues);
+
+    setRows((prevRows) => {
+      return newRows.map((newRow) => {
+        const existingRow = prevRows.find(
+          (prevRow) => prevRow.color === newRow.color && prevRow.size === newRow.size
+        );
+
+        // Ensure that if size is removed, the parent color row retains its values
+        if (newRow.size === null) {
+          return existingRow
+            ? {
+                ...existingRow,
+                size: null, // This is the parent row (no size)
+                price: existingRow.price || newRow.price,
+                salePrice: existingRow.salePrice || newRow.salePrice,
+                supply: existingRow.supply || newRow.supply,
+                cost: existingRow.cost || newRow.cost,
+                profit: existingRow.profit || newRow.profit,
+              }
+            : newRow;
+        }
+
+        return existingRow ? { ...existingRow, ...newRow } : newRow;
+      });
+    });
+
+    // Update variant values state
+    setVariantValues((prevVariantValues) => {
+      const updatedValues = { ...prevVariantValues };
+
+      newRows.forEach((row) => {
+        const key = `${row.color}-${row.size || 'null'}`;
+        updatedValues[key] = updatedValues[key] || { ...row };
+      });
+
+      return updatedValues;
+    });
+
+    // Calculate total profit after setting new rows
+    const total = newRows.reduce((acc, row) => {
+      const profitValue = Number(row.profit) || 0; // Convert profitValue to a number
+      console.log(`Calculating profit for ${row.color} ${row.size}: ${profitValue}`);
+      return acc + profitValue;
+    }, 0);
+
+    setTotalProfit(total);
+
+
+
+  }, [colors, sizes, masterValues]);
+
   
+  const handleExpandClick = (color) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [color]: !prev[color],
+    }));
+  };
 
   const handleParentChange = (color, field, value) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => {
-        if (row.color === color) {
-          const newRow = { ...row, [field]: value };
-          const salePrice = parseFloat(newRow.salePrice || newRow.price || 0);
-          if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
-            newRow.profit = (salePrice - parseFloat(newRow.cost || 0)) * parseFloat(newRow.supply || 0);
-          }        
-          return newRow;
-        }
-        return row;
-      })
-    );
-  
+    updateColorRows(color, field, value); // Call your updateColorRows function
+    
     setVariantValues((prevVariantValues) => {
       const updatedValues = { ...prevVariantValues };
       Object.keys(updatedValues).forEach((key) => {
@@ -243,15 +237,13 @@ function ProductVariantsTable({ colors, sizes }) {
       return updatedValues;
     });
   };
-  
-
   const handleVariantChange = (key, field, value) => {
     setVariantValues((prev) => {
       const updatedVariant = { ...prev[key], [field]: value };
       const salePrice = parseFloat(updatedVariant.salePrice || updatedVariant.price || 0);
-
       if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
-        updatedVariant.profit = (salePrice - parseFloat(updatedVariant.cost || 0)) * parseFloat(updatedVariant.supply || 0);
+        const supply = parseFloat(updatedVariant.supply || 0);
+        updatedVariant.profit = supply > 0 ? (salePrice - parseFloat(updatedVariant.cost || 0)) * supply : 0;
       }
       
       return {
@@ -273,6 +265,8 @@ function ProductVariantsTable({ colors, sizes }) {
     cost: Object.values(variantValues).reduce((acc, row) => acc + parseFloat(row.cost || 0), 0),
     profit: Object.values(variantValues).reduce((acc, row) => acc + parseFloat(row.profit || 0), 0),
   };
+
+  
 
   return (
     <TableContainer component={Paper} sx={tableContainerStyles}>
@@ -474,7 +468,7 @@ function ProductVariantsTable({ colors, sizes }) {
                               <StyledTableCell align="right" sx={{ minWidth: '185px' }}>
                                 <SymMoneyTextField
                                   value={variantValues[key]?.profit || ''}
-                                  onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
+                                  // onChange={(e) => handleVariantChange(key, 'profit', e.target.value)}
                                   readOnly={true}
                                   allowNegative={true}
                                   isProfit={true}
@@ -510,7 +504,8 @@ function ProductVariantsTable({ colors, sizes }) {
             {totalValues.cost.toFixed(2)}
           </StyledTableCell>
           <StyledTableCell align="right" sx={tableFooterTextStyles}>
-            {totalValues.profit.toFixed(2)}
+            {/* {totalValues.profit.toFixed(2)} */}
+            {totalProfit}
           </StyledTableCell>
         </StyledTableRow>
       </Table>

@@ -1,8 +1,8 @@
 "use client";
 
-import NextImage from "next/image";
+import Image from "next/image";
 import styled from "@mui/material/styles/styled";
-const LazyImage = styled(NextImage)({
+const LazyImage = styled(Image)({
   width: "100%",
   height: "auto"
 });
