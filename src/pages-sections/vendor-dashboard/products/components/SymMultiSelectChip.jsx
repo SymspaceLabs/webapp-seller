@@ -47,6 +47,7 @@ const SymMultiSelectChip = ({ options, selectedItems, setSelectedItems, label = 
         {label}
       </Typography>
       <Autocomplete
+        disableCloseOnSelect
         multiple
         freeSolo
         options={options.map((option) => option.label)}
