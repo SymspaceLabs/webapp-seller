@@ -8,13 +8,13 @@ import {
   Paper,
   IconButton,
   Collapse,
-  Tooltip,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import SymMoneyTextField from './SymMoneyTextField'; // Import your custom component
-import SymNumberTextField from './SymNumberTextField'; // Import your custom component
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Import Info icon
+import SymMoneyTextField from './SymMoneyTextField';
+import SymNumberTextField from './SymNumberTextField';
+import SymTooltip from './SymTooltip';
+
 import { StyledTableCell, tableContainerStyles, tableFooterTextStyles, StyledTableRow  } from './TableStyles';
 
 
@@ -240,6 +240,7 @@ function ProductVariantsTable({ colors, sizes }) {
   const handleVariantChange = (key, field, value) => {
     setVariantValues((prev) => {
       const updatedVariant = { ...prev[key], [field]: value };
+      
       const salePrice = parseFloat(updatedVariant.salePrice || updatedVariant.price || 0);
       if (field === 'salePrice' || field === 'price' || field === 'cost' || field === 'supply') {
         const supply = parseFloat(updatedVariant.supply || 0);
@@ -278,51 +279,27 @@ function ProductVariantsTable({ colors, sizes }) {
             <StyledTableCell padding="checkbox" />
             <StyledTableCell sx={{ width: '200px', textAlign: 'left' }}>
               Variant
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
             <StyledTableCell align="right" sx={{ width: '200px' }}>
               Price
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
             <StyledTableCell align="right" sx={{ width: '200px' }}>
               Sale Price
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
             <StyledTableCell align="right" sx={{ width: '200px' }}>
               Supply
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
             <StyledTableCell align="right" sx={{ width: '200px' }}>
               Cost
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
             <StyledTableCell align="right" sx={{ width: '200px' }}>
               Profit
-              <Tooltip title="Select the product variant">
-                <IconButton size="small" aria-label="info">
-                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'white' }} /> {/* Change icon color to white */}
-                </IconButton>
-              </Tooltip>
+              <SymTooltip title="Select the product variant" />
             </StyledTableCell>
           </TableRow>
         </TableHead>
