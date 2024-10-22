@@ -825,7 +825,7 @@ export const categoryMenus = [
     //Groceries
     {
         icon: Food,
-        title: "Groceries & Gourmet Foods",
+        title: "Recipes",
         component: MegaMenu2.name,
         children: [
         {
@@ -1063,6 +1063,11 @@ export const categoryMenus = [
                         { title: 'Mobility Scooters' },
                     ]
                 },
+            ]
+        },{
+            title: "Daily Living Aids",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Daily Living Aids",
                     children: [
@@ -1072,6 +1077,11 @@ export const categoryMenus = [
                         { title: 'Communication Aids' },
                     ]
                 },
+            ]
+        },{
+            title: "Accessibility Equipment",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Accessibility Equipment",
                     children: [
@@ -1102,6 +1112,11 @@ export const categoryMenus = [
                         { title: 'Bottoms' },
                     ]
                 },
+            ]
+        },{
+            title: "Prenatal Care",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Prenatal Care",
                     children: [
@@ -1110,7 +1125,12 @@ export const categoryMenus = [
                         { title: 'Pregnancy Pillows' },
                         { title: 'Skincare' },
                     ]
-                },
+                }
+            ]
+        },{
+            title: "Baby Essentials",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Baby Essentials",
                     children: [
@@ -1143,6 +1163,11 @@ export const categoryMenus = [
                         { title: 'Vision & Hearing Aids' },
                     ]
                 },
+            ]
+        },{
+            title: "Comfort & Care",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Comfort & Care",
                     children: [
@@ -1152,6 +1177,12 @@ export const categoryMenus = [
                         { title: 'Daily Living Aids' },
                     ]
                 },
+
+            ]
+        },{
+            title: "Recreation & Leisure",
+            component: MegaMenu1.name,
+            children: [
                 {
                     title: "Recreation & Leisure",
                     children: [

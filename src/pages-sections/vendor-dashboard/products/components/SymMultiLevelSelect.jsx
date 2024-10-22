@@ -53,6 +53,8 @@ function CategoryMenu({ render, onCategorySelect }) {
 }
 
 function CategoryList({ open, onCategorySelect, position = "absolute" }) {
+  const [activeItem, setActiveItem] = useState(null); // State to track the active option
+
   return (
     <StyledRoot open={open} position={position}>
       {categoryMenus.map((item) => {
@@ -65,6 +67,8 @@ function CategoryList({ open, onCategorySelect, position = "absolute" }) {
             icon={icon}
             caret={!!children}
             onClick={() => onCategorySelect(title)}
+            isActive={activeItem === title} // Set active if it matches
+            onHover={() => setActiveItem(title)} // Set the current option as active when hovered
             render={
               component ? (
                 <MegaMenu data={children} onCategorySelect={onCategorySelect} banner={offer} />
@@ -78,9 +82,14 @@ function CategoryList({ open, onCategorySelect, position = "absolute" }) {
 }
 
 
-function CategoryListItem({ title, onClick, render, caret = true, icon: Icon }) {
+
+function CategoryListItem({ title, onClick, render, caret = true, icon: Icon, isActive, onHover }) {
   return (
-    <Wrapper1 onClick={onClick}>
+    <Wrapper1 
+      onClick={onClick}
+      onMouseEnter={onHover} // Trigger when mouse enters
+      className={isActive ? "active" : ""} // Add active class if it is the selected option
+    >
       <Box>
         <div className="category-dropdown-link">
           {Icon ? <Icon fontSize="small" color="inherit" /> : null}
@@ -92,6 +101,7 @@ function CategoryListItem({ title, onClick, render, caret = true, icon: Icon }) 
     </Wrapper1>
   );
 }
+
 
 function MegaMenu1({ data, onCategorySelect }) {
   return <ColumnList list={data} onCategorySelect={onCategorySelect} />;
@@ -221,7 +231,7 @@ const Wrapper1 = styled("div")(({ theme }) => ({
       paddingLeft: "0.75rem",
     },
   },
-  ":hover": {
+  ":hover, &.active": { // Apply hover and active styles
     color: theme.palette.primary.main,
     background: theme.palette.action.hover,
     "& > .mega-menu": {
@@ -236,5 +246,6 @@ const Wrapper1 = styled("div")(({ theme }) => ({
     position: "absolute",
   },
 }));
+
 
 export default SymMultiLevelSelect;
